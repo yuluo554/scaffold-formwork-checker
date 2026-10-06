@@ -1,0 +1,30 @@
+{
+  "also_expect": [
+    {
+      "actual": 2.4,
+      "check_type": "threshold",
+      "clause_ref": "JGJ130-6.1.1",
+      "limit_value": 2.0,
+      "note": "2.4m 同时超出表6.1.1-1 全部步距档（最大 2.0m 仅满堂支撑架侧）",
+      "op": "<=",
+      "param": "step",
+      "rule_id": "R-step-limit-20",
+      "verdict": "violation"
+    }
+  ],
+  "clean_baseline": false,
+  "fixture_id": "SY-step-over-02",
+  "injection": "step_over",
+  "main_expect": [
+    {
+      "actual": 2.4,
+      "check_type": "threshold",
+      "clause_ref": "JGJ130-6.1.1",
+      "limit_value": 1.8,
+      "op": "<=",
+      "param": "step",
+      "rule_id": "R-step-limit",
+      "verdict": "violation"
+    }
+  ]
+}

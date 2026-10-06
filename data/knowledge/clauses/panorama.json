@@ -1,0 +1,158 @@
+{
+  "meta": {
+    "purpose": "危大分级判定阈值清单（grading/ 判定器 M3 消费）。首期范围=建办质〔2018〕31号附件1/附件2 中与脚手架工程、混凝土模板支撑工程相关的条目；判定边界基准用例=清单条目×边界值±ε（如 23.9/24.0/24.1）。",
+    "levels_semantics": {
+      "none": "非危大",
+      "weida": "危大工程——义务：编制专项施工方案（31号文第二条九项内容），施工单位技术负责人审核签字盖公章+总监理工程师审查签字盖执业印章（37号令第十一条）后实施",
+      "chaoguimo": "超过一定规模的危大工程——义务：专项施工方案+施工单位组织专家论证会（专家≥5名，37号令第十二条）"
+    },
+    "boundary_semantics": "原文\"及以上\"\"超过\"按 ≥ / > 理解：24m及以上→>=24；开挖深度超过3m→>3。判定器逐条按 basis.excerpt 的原文措辞映射比较符。",
+    "sources": {
+      "annex1": "建办质〔2018〕31号 附件1 危险性较大的分部分项工程范围（waizi.org.cn 全文转录，附件1句佐证=建题帮题库页）",
+      "annex2": "建办质〔2018〕31号 附件2 超过一定规模的危险性较大的分部分项工程范围（waizi.org.cn 转录 + 深圳市政府在线 gov.cn 逐字引用页双渠道核对一致）"
+    },
+    "excluded_this_phase": "基坑工程、起重吊装、拆除、暗挖、建筑幕墙、钢结构安装等非脚手架/模板条目首期不建判定条目（扩展项留档）；但 31号文原文全文已在 raw/ 留档可随时补录。"
+  },
+  "items": [
+    {
+      "item_id": "pan-luodi-gangguan-24",
+      "project_type": "落地式钢管脚手架工程（含采光井、电梯井脚手架）",
+      "category": "coupler_steel_pipe_scaffold",
+      "judge_params": ["build_height"],
+      "levels": {
+        "none": {"cond": "build_height < 24", "label": "非危大"},
+        "weida": {"cond": "24 <= build_height < 50", "label": "危大工程", "duty": "编制专项施工方案，施工单位技术负责人审核+总监理工程师审查"},
+        "chaoguimo": {"cond": "build_height >= 50", "label": "超过一定规模的危大工程", "duty": "专项施工方案+专家论证（专家≥5名）"}
+      },
+      "basis": [
+        {"doc": "建办质〔2018〕31号 附件1 四、脚手架工程（一）", "excerpt": "搭设高度24m及以上的落地式钢管脚手架工程（包括采光井、电梯井脚手架）。", "status": "已核对", "channel": "waizi.org.cn 全文 + 建题帮题库句佐证"},
+        {"doc": "建办质〔2018〕31号 附件2 四、脚手架工程（一）", "excerpt": "搭设高度50m及以上的落地式钢管脚手架工程。", "status": "已核对", "channel": "waizi.org.cn + 深圳市政府在线（gov.cn）双渠道一致"}
+      ],
+      "note": "24m/50m 两档题目阶段已核 ✅；本次经官方正文+两独立转载渠道复核。落地式钢管脚手架含满堂脚手架类落地架体；模板支撑架体归 pan-muban-zhicheng 条目。"
+    },
+    {
+      "item_id": "pan-fuzhuo-shengjiang",
+      "project_type": "附着式升降脚手架工程 / 附着式升降操作平台工程",
+      "category": "coupler_steel_pipe_scaffold",
+      "judge_params": ["lift_height"],
+      "levels": {
+        "none": {"cond": "false（该类型工程即为危大）", "label": "危大工程（类型即触发）"},
+        "weida": {"cond": "lift_height < 150", "label": "危大工程", "duty": "编制专项施工方案，施工单位技术负责人审核+总监理工程师审查"},
+        "chaoguimo": {"cond": "lift_height >= 150", "label": "超过一定规模的危大工程", "duty": "专项施工方案+专家论证（专家≥5名）"}
+      },
+      "basis": [
+        {"doc": "建办质〔2018〕31号 附件1 四、脚手架工程（二）", "excerpt": "附着式升降脚手架工程。", "status": "已核对", "channel": "waizi.org.cn 全文"},
+        {"doc": "建办质〔2018〕31号 附件2 四、脚手架工程（二）", "excerpt": "提升高度在150m及以上的附着式升降脚手架工程或附着式升降操作平台工程。", "status": "已核对", "channel": "waizi.org.cn + 深圳市政府在线（gov.cn）双渠道一致"}
+      ],
+      "note": "附件1 无高度门槛（类型即危大）；附件2 以提升高度 150m 分档。首期不实现该类验算，仅分级判定。"
+    },
+    {
+      "item_id": "pan-xuantiao-jiaoshoujia",
+      "project_type": "悬挑式脚手架工程",
+      "category": "coupler_steel_pipe_scaffold",
+      "judge_params": ["segment_height"],
+      "levels": {
+        "none": {"cond": "false（该类型工程即为危大）", "label": "危大工程（类型即触发）"},
+        "weida": {"cond": "segment_height < 20", "label": "危大工程", "duty": "编制专项施工方案，施工单位技术负责人审核+总监理工程师审查"},
+        "chaoguimo": {"cond": "segment_height >= 20", "label": "超过一定规模的危大工程", "duty": "专项施工方案+专家论证（专家≥5名）"}
+      },
+      "basis": [
+        {"doc": "建办质〔2018〕31号 附件1 四、脚手架工程（三）", "excerpt": "悬挑式脚手架工程。", "status": "已核对", "channel": "waizi.org.cn 全文"},
+        {"doc": "建办质〔2018〕31号 附件2 四、脚手架工程（三）", "excerpt": "分段架体搭设高度20m及以上的悬挑式脚手架工程。", "status": "已核对", "channel": "waizi.org.cn + 深圳市政府在线（gov.cn）双渠道一致"}
+      ],
+      "note": "附件2 以分段架体搭设高度 20m 分档。悬挑梁验算（JGJ130 5.6）首期不做，仅分级判定。"
+    },
+    {
+      "item_id": "pan-gaochudiaolan",
+      "project_type": "高处作业吊篮",
+      "category": "coupler_steel_pipe_scaffold",
+      "judge_params": [],
+      "levels": {
+        "none": {"cond": "false（该类型工程即为危大）", "label": "危大工程（类型即触发）"},
+        "weida": {"cond": "true", "label": "危大工程", "duty": "编制专项施工方案，施工单位技术负责人审核+总监理工程师审查"},
+        "chaoguimo": {"cond": "false", "label": "31号文附件2 无对应超规模条目"}
+      },
+      "basis": [
+        {"doc": "建办质〔2018〕31号 附件1 四、脚手架工程（四）", "excerpt": "高处作业吊篮。", "status": "已核对", "channel": "waizi.org.cn 全文"}
+      ],
+      "note": "附件2 脚手架工程节无吊篮超规模条目。题目边界：吊篮验算不做（非目标）。"
+    },
+    {
+      "item_id": "pan-xieliao-pingtai",
+      "project_type": "卸料平台、操作平台工程",
+      "category": "coupler_steel_pipe_scaffold",
+      "judge_params": [],
+      "levels": {
+        "none": {"cond": "false（该类型工程即为危大）", "label": "危大工程（类型即触发）"},
+        "weida": {"cond": "true", "label": "危大工程", "duty": "编制专项施工方案，施工单位技术负责人审核+总监理工程师审查"},
+        "chaoguimo": {"cond": "false", "label": "31号文附件2 无对应超规模条目"}
+      },
+      "basis": [
+        {"doc": "建办质〔2018〕31号 附件1 四、脚手架工程（五）", "excerpt": "卸料平台、操作平台工程。", "status": "已核对", "channel": "waizi.org.cn 全文"}
+      ],
+      "note": null
+    },
+    {
+      "item_id": "pan-yixing-jiaoshoujia",
+      "project_type": "异型脚手架工程",
+      "category": "coupler_steel_pipe_scaffold",
+      "judge_params": [],
+      "levels": {
+        "none": {"cond": "false（该类型工程即为危大）", "label": "危大工程（类型即触发）"},
+        "weida": {"cond": "true", "label": "危大工程", "duty": "编制专项施工方案，施工单位技术负责人审核+总监理工程师审查"},
+        "chaoguimo": {"cond": "false", "label": "31号文附件2 无对应超规模条目"}
+      },
+      "basis": [
+        {"doc": "建办质〔2018〕31号 附件1 四、脚手架工程（六）", "excerpt": "异型脚手架工程。", "status": "已核对", "channel": "waizi.org.cn 全文"}
+      ],
+      "note": null
+    },
+    {
+      "item_id": "pan-gongjushi-muban",
+      "project_type": "各类工具式模板工程（滑模、爬模、飞模、隧道模等）",
+      "category": "formwork_support",
+      "judge_params": [],
+      "levels": {
+        "none": {"cond": "false（该类型工程即为危大）", "label": "危大工程（类型即触发）"},
+        "weida": {"cond": "true", "label": "危大工程", "duty": "编制专项施工方案，施工单位技术负责人审核+总监理工程师审查"},
+        "chaoguimo": {"cond": "false", "label": "31号文附件2 无对应超规模条目（滑模/爬模设计荷载见 JGJ162 4.3.3/4.3.4）"}
+      },
+      "basis": [
+        {"doc": "建办质〔2018〕31号 附件1 二、模板工程及支撑体系（一）", "excerpt": "各类工具式模板工程：包括滑模、爬模、飞模、隧道模等工程。", "status": "已核对", "channel": "waizi.org.cn 全文"}
+      ],
+      "note": null
+    },
+    {
+      "item_id": "pan-muban-zhicheng",
+      "project_type": "混凝土模板支撑工程",
+      "category": "formwork_support",
+      "judge_params": ["support_height", "support_span", "total_load_design", "linear_load_design", "independent_member"],
+      "levels": {
+        "none": {"cond": "support_height < 5 && support_span < 10 && total_load_design < 10 && linear_load_design < 15 && !(independent_member)", "label": "非危大"},
+        "weida": {"cond": "support_height >= 5 || support_span >= 10 || total_load_design >= 10 || linear_load_design >= 15 || independent_member", "label": "危大工程", "duty": "编制专项施工方案，施工单位技术负责人审核+总监理工程师审查"},
+        "chaoguimo": {"cond": "support_height >= 8 || support_span >= 18 || total_load_design >= 15 || linear_load_design >= 20", "label": "超过一定规模的危大工程", "duty": "专项施工方案+专家论证（专家≥5名）"}
+      },
+      "basis": [
+        {"doc": "建办质〔2018〕31号 附件1 二、模板工程及支撑体系（二）", "excerpt": "混凝土模板支撑工程：搭设高度5m及以上，或搭设跨度10m及以上，或施工总荷载（荷载效应基本组合的设计值，以下简称设计值）10kN/m2及以上，或集中线荷载（设计值）15kN/m及以上，或高度大于支撑水平投影宽度且相对独立无联系构件的混凝土模板支撑工程。", "status": "已核对", "channel": "waizi.org.cn 全文"},
+        {"doc": "建办质〔2018〕31号 附件2 二、模板工程及支撑体系（二）", "excerpt": "混凝土模板支撑工程：搭设高度8m及以上，或搭设跨度18m及以上，或施工总荷载（设计值）15kN/m2及以上，或集中线荷载（设计值）20kN/m及以上。", "status": "已核对", "channel": "waizi.org.cn + 深圳市政府在线（gov.cn）双渠道一致"}
+      ],
+      "note": "危大门槛 5 条件为\"或\"关系（含相对独立无联系构件几何条件）；超规模 4 条件为\"或\"关系。施工总荷载/集中线荷载均为荷载效应基本组合的设计值。"
+    },
+    {
+      "item_id": "pan-chengzhong-zhicheng",
+      "project_type": "承重支撑体系（钢结构安装等满堂支撑体系）",
+      "category": "formwork_support",
+      "judge_params": ["single_point_load"],
+      "levels": {
+        "none": {"cond": "false（该类型工程即为危大）", "label": "危大工程（类型即触发）"},
+        "weida": {"cond": "single_point_load < 7", "label": "危大工程", "duty": "编制专项施工方案，施工单位技术负责人审核+总监理工程师审查"},
+        "chaoguimo": {"cond": "single_point_load >= 7", "label": "超过一定规模的危大工程", "duty": "专项施工方案+专家论证（专家≥5名）"}
+      },
+      "basis": [
+        {"doc": "建办质〔2018〕31号 附件1 二、模板工程及支撑体系（三）", "excerpt": "承重支撑体系：用于钢结构安装等满堂支撑体系。", "status": "已核对", "channel": "waizi.org.cn 全文"},
+        {"doc": "建办质〔2018〕31号 附件2 二、模板工程及支撑体系（三）", "excerpt": "承重支撑体系：用于钢结构安装等满堂支撑体系，承受单点集中荷载7kN及以上。", "status": "已核对", "channel": "waizi.org.cn + 深圳市政府在线（gov.cn）双渠道一致"}
+      ],
+      "note": "单点集中荷载阈值 7kN。"
+    }
+  ]
+}

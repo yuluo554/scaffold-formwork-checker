@@ -1,0 +1,278 @@
+{
+  "meta": {
+    "purpose": "公式表：机器可读的验算公式骨架。expr 用变量符号式表示；系数、参数取值以 thresholds.json 与条款库为准。M2 引擎按 formula_id 装配。",
+    "discipline": "status=待核对 的公式不得进入计算路径。公式本体均从原文公式图视觉转录（文件见 source）。"
+  },
+  "formulas": [
+    {
+      "formula_id": "F-J130-stab-nw",
+      "expr": "N / (φ*A) <= f",
+      "params": {
+        "N": {"meaning": "立杆段轴向力设计值", "unit": "N", "source": "F-J130-N-nw"},
+        "φ": {"meaning": "轴心受压构件稳定系数", "unit": "-", "source": "T-JGJ130-phi-table (λ=l0/i 查表A.0.6)"},
+        "A": {"meaning": "立杆截面面积", "unit": "mm²", "source": "T-JGJ130-section-props (表B.0.1)"},
+        "f": {"meaning": "Q235 钢材抗压强度设计值", "unit": "N/mm²", "source": "T-JGJ130-steel-design (表5.1.6, 205)"}
+      },
+      "applies_to": "M-1 立杆稳定·不组合风",
+      "clause_refs": ["JGJ130-5.2.6"],
+      "status": "已核对",
+      "source": {"file": "JGJ130-2011_pmgd_imgs/1-2309161F930M2.jpg", "fetched": "2026-10-06"}
+    },
+    {
+      "formula_id": "F-J130-stab-w",
+      "expr": "N / (φ*A) + Mw / W <= f",
+      "params": {
+        "Mw": {"meaning": "风荷载产生立杆段弯矩设计值", "unit": "N·mm", "source": "F-J130-Mw"},
+        "W": {"meaning": "钢管截面模量", "unit": "mm³", "source": "T-JGJ130-section-props (表B.0.1)"}
+      },
+      "applies_to": "M-2 立杆稳定·组合风",
+      "clause_refs": ["JGJ130-5.2.6"],
+      "status": "已核对",
+      "source": {"file": "JGJ130-2011_pmgd_imgs/1-2309161F930M2.jpg", "fetched": "2026-10-06"}
+    },
+    {
+      "formula_id": "F-J130-N-nw",
+      "expr": "N = 1.2*(NG1k + NG2k) + 1.4*ΣNQk",
+      "params": {
+        "NG1k": {"meaning": "脚手架结构自重产生轴向力标准值（gk×搭设高度，gk 查表A.0.1）", "unit": "kN", "source": "T-JGJ130-gk-table"},
+        "NG2k": {"meaning": "构配件自重产生轴向力标准值（脚手板/栏杆挡脚板/安全网等）", "unit": "kN", "source": "T-JGJ130-dead-loads"},
+        "ΣNQk": {"meaning": "施工荷载轴向力标准值总和（内外立杆各按一纵距内施工荷载总和 1/2）", "unit": "kN", "source": "T-JGJ130-live-loads"}
+      },
+      "applies_to": "M-1 立杆稳定·不组合风",
+      "clause_refs": ["JGJ130-5.2.7", "JGJ130-5.1.2"],
+      "status": "已核对",
+      "source": {"file": "JGJ130-2011_pmgd_imgs/1-2309161F939613.jpg", "fetched": "2026-10-06"}
+    },
+    {
+      "formula_id": "F-J130-N-w",
+      "expr": "N = 1.2*(NG1k + NG2k) + 0.9*1.4*ΣNQk",
+      "params": {},
+      "applies_to": "M-2 立杆稳定·组合风",
+      "clause_refs": ["JGJ130-5.2.7", "JGJ130-5.1.2"],
+      "status": "已核对",
+      "source": {"file": "JGJ130-2011_pmgd_imgs/1-2309161F939613.jpg", "fetched": "2026-10-06"}
+    },
+    {
+      "formula_id": "F-J130-l0",
+      "expr": "l0 = k*μ*h",
+      "params": {
+        "k": {"meaning": "立杆计算长度附加系数（取1.155；验算允许长细比取1）", "unit": "-", "source": "JGJ130-5.2.8"},
+        "μ": {"meaning": "单、双排脚手架整体稳定单杆计算长度系数", "unit": "-", "source": "T-JGJ130-mu-coef (表5.2.8)"},
+        "h": {"meaning": "步距", "unit": "mm", "source": "输入参数"}
+      },
+      "applies_to": "M-1/M-2 立杆稳定（单双排）",
+      "clause_refs": ["JGJ130-5.2.8"],
+      "status": "已核对",
+      "source": {"file": "JGJ130-2011_pmgd_imgs/1-2309161F9325R.jpg", "fetched": "2026-10-06"}
+    },
+    {
+      "formula_id": "F-J130-Mw",
+      "expr": "Mw = 0.9*1.4*Mwk = 0.9*1.4*wk*la*h^2 / 10",
+      "params": {
+        "wk": {"meaning": "风荷载标准值", "unit": "kN/m²", "source": "F-J130-wk"},
+        "la": {"meaning": "立杆纵距", "unit": "m", "source": "输入参数"},
+        "h": {"meaning": "步距", "unit": "m", "source": "输入参数"}
+      },
+      "applies_to": "M-2 立杆稳定·组合风（Mwk 单位 kN·m，Mw 换算 N·mm）",
+      "clause_refs": ["JGJ130-5.2.9"],
+      "status": "已核对",
+      "source": {"file": "JGJ130-2011_pmgd_imgs/1-2309161F932357.jpg", "fetched": "2026-10-06"}
+    },
+    {
+      "formula_id": "F-J130-wk",
+      "expr": "wk = μz*μs*w0",
+      "params": {
+        "μz": {"meaning": "风压高度变化系数（GB 50009）", "unit": "-", "source": "外部规范（输入参数，引擎不做内嵌表）"},
+        "μs": {"meaning": "脚手架风荷载体型系数（全封闭1.0φ/敞开框架1.3φ；φ=1.2An/Aw 或表A.0.5）", "unit": "-", "source": "T-JGJ130-shape-coef"},
+        "w0": {"meaning": "基本风压（GB 50009，重现期n=10）", "unit": "kN/m²", "source": "外部规范（输入参数）"}
+      },
+      "applies_to": "M-2/M-4 风荷载",
+      "clause_refs": ["JGJ130-4.2.5", "JGJ130-4.2.6"],
+      "status": "已核对",
+      "source": {"file": "JGJ130-2011_pmgd_imgs/1-2309161F92L31.jpg", "fetched": "2026-10-06"}
+    },
+    {
+      "formula_id": "F-J130-beam-strength",
+      "expr": "σ = M / W <= f",
+      "params": {
+        "M": {"meaning": "水平杆弯矩设计值", "unit": "N·mm", "source": "F-J130-beam-M"},
+        "W": {"meaning": "截面模量（表B.0.1）", "unit": "mm³", "source": "T-JGJ130-section-props"}
+      },
+      "applies_to": "M-3 纵/横向水平杆抗弯",
+      "clause_refs": ["JGJ130-5.2.1"],
+      "status": "已核对",
+      "source": {"file": "JGJ130-2011_pmgd_imgs/1-2309161F92W55.jpg", "fetched": "2026-10-06"}
+    },
+    {
+      "formula_id": "F-J130-beam-M",
+      "expr": "M = 1.2*MGk + 1.4*ΣMQk",
+      "params": {
+        "MGk": {"meaning": "脚手板自重产生弯矩标准值", "unit": "kN·m", "source": "T-JGJ130-dead-loads"},
+        "ΣMQk": {"meaning": "施工荷载产生弯矩标准值", "unit": "kN·m", "source": "T-JGJ130-live-loads"}
+      },
+      "applies_to": "M-3 水平杆（计算模型：纵向三跨连续梁/横向简支梁，5.2.4）",
+      "clause_refs": ["JGJ130-5.2.2", "JGJ130-5.2.4"],
+      "status": "已核对",
+      "source": {"file": "JGJ130-2011_pmgd_imgs/1-2309161F92a58.jpg", "fetched": "2026-10-06"}
+    },
+    {
+      "formula_id": "F-J130-beam-deflection",
+      "expr": "v <= [v]",
+      "params": {
+        "v": {"meaning": "挠度（标准组合 1.0 计算）", "unit": "mm", "source": "结构力学求解（三跨连续/简支）"},
+        "[v]": {"meaning": "容许挠度（l/150 与 10mm 取小；悬挑受弯 l/400；型钢悬挑梁 l/250）", "unit": "mm", "source": "T-JGJ130-deflection-limits"}
+      },
+      "applies_to": "M-3 水平杆挠度",
+      "clause_refs": ["JGJ130-5.2.3", "JGJ130-5.1.8", "JGJ130-5.1.3"],
+      "status": "已核对",
+      "source": {"file": "JGJ130-2011_pmgd.cn_品茗规范库.html（文本条款）", "fetched": "2026-10-06"}
+    },
+    {
+      "formula_id": "F-J130-antislip",
+      "expr": "R <= Rc",
+      "params": {
+        "R": {"meaning": "纵向或横向水平杆传给立杆的竖向作用力设计值", "unit": "kN", "source": "结构力学求解"},
+        "Rc": {"meaning": "扣件抗滑承载力设计值（直角/旋转 8.0，对接 3.2）", "unit": "kN", "source": "T-JGJ130-coupler-capacity"}
+      },
+      "applies_to": "M-3 水平杆连接扣件抗滑 / 连墙件扣件（5.2.15）",
+      "clause_refs": ["JGJ130-5.2.5", "JGJ130-5.2.15", "JGJ130-5.1.7"],
+      "status": "已核对",
+      "source": {"file": "JGJ130-2011_pmgd.cn_品茗规范库.html（文本条款）", "fetched": "2026-10-06"}
+    },
+    {
+      "formula_id": "F-J130-tie-strength",
+      "expr": "σ = Nl / Ac <= 0.85*f",
+      "params": {
+        "Nl": {"meaning": "连墙件轴向力设计值", "unit": "N", "source": "F-J130-tie-N"},
+        "Ac": {"meaning": "连墙件净截面面积", "unit": "mm²", "source": "输入参数（连墙件截面）"}
+      },
+      "applies_to": "M-4 连墙件强度",
+      "clause_refs": ["JGJ130-5.2.12"],
+      "status": "已核对",
+      "source": {"file": "JGJ130-2011_pmgd_imgs/1-2309161F9333Z.jpg", "fetched": "2026-10-06"}
+    },
+    {
+      "formula_id": "F-J130-tie-stab",
+      "expr": "Nl / (φ*A) <= 0.85*f",
+      "params": {
+        "A": {"meaning": "连墙件毛截面面积", "unit": "mm²", "source": "输入参数"},
+        "φ": {"meaning": "连墙件稳定系数（按其长细比查表A.0.6）", "unit": "-", "source": "T-JGJ130-phi-table"}
+      },
+      "applies_to": "M-4 连墙件稳定",
+      "clause_refs": ["JGJ130-5.2.12"],
+      "status": "已核对",
+      "source": {"file": "JGJ130-2011_pmgd_imgs/1-2309161F9333Z.jpg", "fetched": "2026-10-06"}
+    },
+    {
+      "formula_id": "F-J130-tie-N",
+      "expr": "Nl = Nlw + N0",
+      "params": {
+        "Nlw": {"meaning": "风荷载产生连墙件轴向力设计值", "unit": "kN", "source": "F-J130-tie-Nlw"},
+        "N0": {"meaning": "连墙件约束平面外变形轴向力（单排 2kN，双排 3kN）", "unit": "kN", "source": "T-JGJ130-tie-N0"}
+      },
+      "applies_to": "M-4 连墙件",
+      "clause_refs": ["JGJ130-5.2.12"],
+      "status": "已核对",
+      "source": {"file": "JGJ130-2011_pmgd_imgs/1-2309161F9333Z.jpg", "fetched": "2026-10-06"}
+    },
+    {
+      "formula_id": "F-J130-tie-Nlw",
+      "expr": "Nlw = 1.4*wk*Aw",
+      "params": {
+        "Aw": {"meaning": "单个连墙件覆盖的脚手架外侧面迎风面积（表6.4.2：3h×3la，≤40/27m²）", "unit": "m²", "source": "T-JGJ130-walltie-spacing"}
+      },
+      "applies_to": "M-4 连墙件",
+      "clause_refs": ["JGJ130-5.2.13", "JGJ130-6.4.2"],
+      "status": "已核对",
+      "source": {"file": "JGJ130-2011_pmgd_imgs/1-2309161F934401.jpg", "fetched": "2026-10-06"}
+    },
+    {
+      "formula_id": "F-J130-foundation",
+      "expr": "pk = Nk / A <= fg",
+      "params": {
+        "Nk": {"meaning": "上部结构传至立杆基础顶面的轴向力标准值", "unit": "kN", "source": "输入/由标准组合计算"},
+        "A": {"meaning": "基础底面面积（垫板/底座尺寸）", "unit": "m²", "source": "输入参数"},
+        "fg": {"meaning": "地基承载力特征值（天然地基按勘察报告；回填土×0.4）", "unit": "kPa", "source": "T-JGJ130-fg-reduction"}
+      },
+      "applies_to": "M-5 立杆地基承载力",
+      "clause_refs": ["JGJ130-5.5.1", "JGJ130-5.5.2"],
+      "status": "已核对",
+      "source": {"file": "JGJ130-2011_pmgd_imgs/1-2309161F936305.jpg", "fetched": "2026-10-06"}
+    },
+    {
+      "formula_id": "F-J162-column",
+      "expr": "N / (φ*A) <= f",
+      "params": {
+        "N": {"meaning": "立柱轴心压力设计值（表4.3.2 组合①G1k+G2k+G3k+Q1k 各项乘分项系数）", "unit": "N", "source": "T-JGJ162-load-combo"},
+        "φ": {"meaning": "轴心受压稳定系数（λ 查附录D表D=GB50017 b类，数值同 JGJ130 表A.0.6）", "unit": "-", "source": "T-JGJ130-phi-table"},
+        "A": {"meaning": "钢管毛截面面积（按实际壁厚检查结果计算；48.3×3.6→506mm²）", "unit": "mm²", "source": "T-JGJ130-section-props"},
+        "f": {"meaning": "钢材抗压强度设计值（Q235≤16mm: 215）", "unit": "N/mm²", "source": "T-JGJ162-steel-design"}
+      },
+      "applies_to": "M-6 模板支架立杆稳定·不组合风（JGJ 162-2008）",
+      "clause_refs": ["JGJ162-5.2.5", "JGJ162-A.1.1-1"],
+      "status": "已核对",
+      "source": {"file": "JGJ162-2008_pmgd_imgs/1-240P1094I2648.jpg", "fetched": "2026-10-06"}
+    },
+    {
+      "formula_id": "F-J162-column-w",
+      "expr": "Nw / (φ*A) + Mw / W <= f",
+      "params": {},
+      "applies_to": "M-6 模板支架立杆稳定·组合风（室外露天支模）",
+      "clause_refs": ["JGJ162-5.2.5"],
+      "status": "已核对",
+      "source": {"file": "JGJ162-2008_pmgd_imgs/1-240P1094I4525.jpg", "fetched": "2026-10-06"}
+    },
+    {
+      "formula_id": "F-J162-Nw",
+      "expr": "Nw = 0.9*(1.2*ΣNGik + 0.9*1.4*ΣNQik)",
+      "params": {
+        "ΣNGik": {"meaning": "各恒载标准值对立杆轴向力之和（G1k+G2k+G3k 按负荷面积）", "unit": "kN", "source": "T-JGJ162-dead-loads"},
+        "ΣNQik": {"meaning": "各活载标准值对立杆轴向力之和，另加 Mw/lb 值（Q1k 立柱 1.0 kN/m²）", "unit": "kN", "source": "T-JGJ162-live-loads"}
+      },
+      "applies_to": "M-6 模板支架立杆稳定·组合风",
+      "clause_refs": ["JGJ162-5.2.5", "JGJ162-4.2.3", "JGJ162-4.3.1"],
+      "status": "已核对",
+      "source": {"file": "JGJ162-2008_pmgd_imgs/1-240P1094I4525.jpg", "fetched": "2026-10-06"}
+    },
+    {
+      "formula_id": "F-J162-Mw",
+      "expr": "Mw = 0.9^2 * 1.4 * wk * la * h^2 / 10",
+      "params": {
+        "wk": {"meaning": "风荷载标准值（βz=1，n=10 年）", "unit": "kN/m²", "source": "JGJ162-4.1.3"},
+        "la": {"meaning": "立柱迎风面的间距", "unit": "m", "source": "输入参数"},
+        "h": {"meaning": "纵横水平拉杆的计算步距（≤1.8m）", "unit": "m", "source": "T-JGJ162-column-step"}
+      },
+      "applies_to": "M-6 模板支架立杆稳定·组合风",
+      "clause_refs": ["JGJ162-5.2.5"],
+      "status": "已核对",
+      "source": {"file": "JGJ162-2008_pmgd_imgs/1-240P1094I4525.jpg", "fetched": "2026-10-06"}
+    },
+    {
+      "formula_id": "F-J162-foundation",
+      "expr": "p = N / A <= mf * fak",
+      "params": {
+        "N": {"meaning": "上部立柱传至垫木顶面的轴向力设计值", "unit": "kN", "source": "T-JGJ162-load-combo"},
+        "A": {"meaning": "垫木底面面积", "unit": "m²", "source": "输入参数"},
+        "mf": {"meaning": "立柱垫木地基土承载力折减系数（表5.2.6）", "unit": "-", "source": "T-JGJ162-fg-reduction"},
+        "fak": {"meaning": "地基土承载力设计值（GB 50007 或地勘报告）", "unit": "kPa", "source": "输入参数"}
+      },
+      "applies_to": "M-6 模板支架立柱地基（JGJ 162 侧；M-5 用 JGJ130 5.5.1）",
+      "clause_refs": ["JGJ162-5.2.6"],
+      "status": "已核对",
+      "source": {"file": "JGJ162-2008_pmgd.cn_品茗规范库.html（文本条款）", "fetched": "2026-10-06"}
+    },
+    {
+      "formula_id": "F-J162-sidepressure",
+      "expr": "F = min(0.22*γc*t0*β1*β2*V^0.5, γc*H)",
+      "params": {
+        "F": {"meaning": "新浇混凝土对模板侧压力计算值", "unit": "kN/m²", "source": "—"},
+        "γc": {"meaning": "混凝土重力密度", "unit": "kN/m³", "source": "T-JGJ162-dead-loads (24)"}
+      },
+      "applies_to": "（预留）模板侧面面板/对拉螺栓验算，首期 5 模块不使用",
+      "clause_refs": ["JGJ162-4.1.1"],
+      "status": "待核对",
+      "source": {"file": "JGJ162-2008_pmgd.cn_品茗规范库.html（条款文本已核；公式本体图未逐字转录）", "fetched": "2026-10-06"},
+      "note": "首期 M-6（支架立杆稳定）不依赖此式；进入模板面板验算范围前必须完成公式图逐字核对。"
+    }
+  ]
+}

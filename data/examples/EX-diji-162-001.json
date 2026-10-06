@@ -1,0 +1,46 @@
+{
+  "example_id": "EX-diji-162-001",
+  "title": "立柱底地基承载力（JGJ 162-2008，原土）",
+  "module": "M-6",
+  "source": {
+    "type": "规范条文算例",
+    "standard": "JGJ 162-2008",
+    "basis": "data/knowledge/clauses/{jgj162_clauses,formulas,thresholds}.json（status=已核对）",
+    "recalc_tool": "tools/gen_examples.py",
+    "fetched": "2026-10-06"
+  },
+  "input_card": {
+    "category": "formwork_support",
+    "foundation": {
+      "soil": "粉土、黏土",
+      "on_backfill": false,
+      "mf": 0.9,
+      "fak_kPa": 100.0,
+      "pad_m": [
+        0.5,
+        0.2
+      ]
+    },
+    "loads_note": "N 取 EX-mubanzhijia-nw-001 设计值（含 γ0=0.9）",
+    "model_notes": [
+      "p=N/A≤mf·fak（5.2.6）"
+    ]
+  },
+  "expect": {
+    "checks": [
+      {
+        "item": "foundation_bearing",
+        "ratio": 0.5914,
+        "tolerance": 0.01,
+        "verdict": "pass"
+      }
+    ],
+    "intermediate": {
+      "N_kN": 5.323,
+      "A_m2": 0.1,
+      "p_kPa": 53.2296,
+      "mf": 0.9,
+      "fak_kPa": 100.0
+    }
+  }
+}

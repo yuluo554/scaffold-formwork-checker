@@ -1,0 +1,62 @@
+{
+  "example_id": "EX-lizhigan-w-001",
+  "title": "立杆稳定性（组合风）密目网全封闭双排装修架",
+  "module": "M-2",
+  "source": {
+    "type": "规范条文算例",
+    "standard": "JGJ 130-2011",
+    "basis": "data/knowledge/clauses/{jgj130_clauses,formulas,thresholds}.json（status=已核对）",
+    "recalc_tool": "tools/gen_examples.py",
+    "fetched": "2026-10-06"
+  },
+  "input_card": {
+    "category": "coupler_steel_pipe_scaffold",
+    "build_height_m": 12.0,
+    "step_m": 1.8,
+    "long_spacing_m": 1.5,
+    "cross_spacing_m": 1.05,
+    "wall_tie": "two_step_three_span",
+    "pipe_spec": "48.3x3.6",
+    "steel_grade": "Q235A",
+    "wind": {
+      "w0_kN_per_m2": 0.4,
+      "mu_z": 1.0,
+      "scaffold_state": "enclosed_net",
+      "shape_phi": 0.8,
+      "back_wall": "全封闭墙"
+    },
+    "loads": {
+      "gk_struct_kN_per_m": 0.1295,
+      "board_kN_per_m2": 0.3,
+      "board_layers": 2,
+      "rail_kN_per_m": 0.16,
+      "safety_net_kN_per_m2": 0.01,
+      "live_kN_per_m2": 2.0
+    },
+    "model_notes": [
+      "μs=1.0φ（表4.2.6 全封闭/半封闭、背靠全封闭墙），φ=0.8（4.2.7 密目网全封闭下限）",
+      "组合风轴力用式5.2.7-2（0.9×1.4 施工项）；Mw=0.9×1.4·wk·la·h²/10"
+    ]
+  },
+  "expect": {
+    "checks": [
+      {
+        "item": "lizhigan_stability",
+        "ratio": 0.4517,
+        "tolerance": 0.01,
+        "verdict": "pass"
+      }
+    ],
+    "intermediate": {
+      "wk_kN_per_m2": 0.32,
+      "N_design_kN": 5.2083,
+      "Mwk_kNm": 0.1555,
+      "Mw_kNm": 0.196,
+      "lambda": 196.1321,
+      "phi": 0.186,
+      "sigma_bend_N_per_mm2": 37.2538,
+      "sigma_N_per_mm2": 92.593,
+      "f": 205.0
+    }
+  }
+}

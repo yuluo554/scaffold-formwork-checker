@@ -1,0 +1,18 @@
+{
+  "also_expect": [],
+  "clean_baseline": false,
+  "fixture_id": "SY-two-sheets-02",
+  "injection": "two_sheets",
+  "main_expect": [
+    {
+      "calcbook_value": 1.8,
+      "check_type": "consistency",
+      "clause_ref": "37号令-第十六条",
+      "note": "方案正文与验算书取值不一致；按影响方向定级（劣于=不合格）",
+      "param": "step",
+      "rule_id": "R-consistency-step",
+      "scheme_value": 1.5,
+      "verdict": "violation"
+    }
+  ]
+}

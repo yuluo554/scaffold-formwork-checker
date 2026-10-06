@@ -1,0 +1,62 @@
+{
+  "example_id": "EX-shuipinggan-hx-001",
+  "title": "横向水平杆抗弯强度与挠度（简支梁）",
+  "module": "M-3",
+  "source": {
+    "type": "规范条文算例",
+    "standard": "JGJ 130-2011",
+    "basis": "data/knowledge/clauses/{jgj130_clauses,formulas,thresholds}.json（status=已核对）",
+    "recalc_tool": "tools/gen_examples.py",
+    "fetched": "2026-10-06"
+  },
+  "input_card": {
+    "category": "coupler_steel_pipe_scaffold",
+    "step_m": 1.8,
+    "long_spacing_m": 1.5,
+    "cross_spacing_m": 1.05,
+    "pipe_spec": "48.3x3.6",
+    "steel_grade": "Q235A",
+    "loads": {
+      "board_kN_per_m2": 0.3,
+      "live_kN_per_m2": 2.0
+    },
+    "model_notes": [
+      "简支梁，计算跨度 l0=lb（图5.2.4 双排）",
+      "均布线荷载负担宽度=la（小横杆间距）",
+      "挠度按标准组合（分项系数 1.0，5.1.3）；[v]=min(l/150,10mm)（表5.1.8）",
+      "R=q·lb/2 为横杆传给纵向水平杆的作用力（5.2.5 抗滑）"
+    ]
+  },
+  "expect": {
+    "checks": [
+      {
+        "item": "bending_strength",
+        "ratio": 0.6058,
+        "tolerance": 0.01,
+        "verdict": "pass"
+      },
+      {
+        "item": "deflection",
+        "ratio": 0.2979,
+        "tolerance": 0.01,
+        "verdict": "pass"
+      },
+      {
+        "item": "antislip",
+        "ratio": 0.3111,
+        "tolerance": 0.01,
+        "verdict": "pass"
+      }
+    ],
+    "intermediate": {
+      "qk_kN_per_m": 3.45,
+      "qd_kN_per_m": 4.74,
+      "M_design_kNm": 0.6532,
+      "sigma_N_per_mm2": 124.1885,
+      "v_mm": 2.0855,
+      "v_allow_mm": 7.0,
+      "R_kN": 2.4885,
+      "Rc_kN": 8.0
+    }
+  }
+}

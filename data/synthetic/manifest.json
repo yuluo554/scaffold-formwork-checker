@@ -1,0 +1,101 @@
+{
+  "fixtures": [
+    {
+      "docx": "SY-clean-01.docx",
+      "docx_sha256": "f880ac4ce5d61ff148c9b6e354f7112eca275e529db72f347864ba2280357167",
+      "id": "SY-clean-01",
+      "injection": "clean",
+      "pool": 0,
+      "truth": "SY-clean-01.truth.json"
+    },
+    {
+      "docx": "SY-clean-02.docx",
+      "docx_sha256": "e64904d7467104757fdbf4c7ec52d336449647b7b3b86834fe220b7fe29145e1",
+      "id": "SY-clean-02",
+      "injection": "clean",
+      "pool": 1,
+      "truth": "SY-clean-02.truth.json"
+    },
+    {
+      "docx": "SY-step-over-01.docx",
+      "docx_sha256": "075f499eb41ff8a838fedc9d45ea68aa2c6f5cfcaf1a0848585922ba477ac7da",
+      "id": "SY-step-over-01",
+      "injection": "step_over",
+      "pool": 0,
+      "truth": "SY-step-over-01.truth.json"
+    },
+    {
+      "docx": "SY-step-over-02.docx",
+      "docx_sha256": "f7cbd73a4d4296d94bb0a30a0bab819b6fd710f4d651005e5835855e890d5d85",
+      "id": "SY-step-over-02",
+      "injection": "step_over",
+      "pool": 2,
+      "truth": "SY-step-over-02.truth.json"
+    },
+    {
+      "docx": "SY-walltie-over-01.docx",
+      "docx_sha256": "9b284d7304abad8daab1dd385f5e623c05418ba2343fb0b289e14f4ddbed0aab",
+      "id": "SY-walltie-over-01",
+      "injection": "walltie_over",
+      "pool": 1,
+      "truth": "SY-walltie-over-01.truth.json"
+    },
+    {
+      "docx": "SY-walltie-over-02.docx",
+      "docx_sha256": "3ed774f13a1ac1de614931ec31f1bbd9118f7c7c8d5e1faa89519ce978a0277e",
+      "id": "SY-walltie-over-02",
+      "injection": "walltie_over",
+      "pool": 0,
+      "truth": "SY-walltie-over-02.truth.json"
+    },
+    {
+      "docx": "SY-brace-missing-01.docx",
+      "docx_sha256": "4e47b8e3a13cf53a577a60d4163e39f344d51f1a50644c47bcfbef7803c25893",
+      "id": "SY-brace-missing-01",
+      "injection": "brace_missing",
+      "pool": 2,
+      "truth": "SY-brace-missing-01.truth.json"
+    },
+    {
+      "docx": "SY-brace-missing-02.docx",
+      "docx_sha256": "bf4b71755db476f2ce841b09134bb904949792bdd96a218dc41322000d544c1e",
+      "id": "SY-brace-missing-02",
+      "injection": "brace_missing",
+      "pool": 0,
+      "truth": "SY-brace-missing-02.truth.json"
+    },
+    {
+      "docx": "SY-two-sheets-01.docx",
+      "docx_sha256": "78885ddea4d29e669865a78286d1bb0a87448c1fabf34011349f558e0521650d",
+      "id": "SY-two-sheets-01",
+      "injection": "two_sheets",
+      "pool": 1,
+      "truth": "SY-two-sheets-01.truth.json"
+    },
+    {
+      "docx": "SY-two-sheets-02.docx",
+      "docx_sha256": "4a9a8860d826bc30956c837cf0a53b8c008c3fc9d1999442bf5d28bf4d3beeba",
+      "id": "SY-two-sheets-02",
+      "injection": "two_sheets",
+      "pool": 2,
+      "truth": "SY-two-sheets-02.truth.json"
+    },
+    {
+      "docx": "SY-grading-missing-01.docx",
+      "docx_sha256": "71b567172f82e3a332a981a9282495e4f1fac705e9ec527bbd93c75870be2d3f",
+      "id": "SY-grading-missing-01",
+      "injection": "grading_missing",
+      "pool": 0,
+      "truth": "SY-grading-missing-01.truth.json"
+    },
+    {
+      "docx": "SY-grading-missing-02.docx",
+      "docx_sha256": "2ae894e2ff41e63660ac78cffc4b97a52d3c14d03b4929ff85bf6be07a47c5cc",
+      "id": "SY-grading-missing-02",
+      "injection": "grading_missing",
+      "pool": 1,
+      "truth": "SY-grading-missing-02.truth.json"
+    }
+  ],
+  "seed": 20261006
+}

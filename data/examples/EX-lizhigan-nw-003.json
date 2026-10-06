@@ -1,0 +1,55 @@
+{
+  "example_id": "EX-lizhigan-nw-003",
+  "title": "立杆稳定性（不组合风）超载不合格例",
+  "module": "M-1",
+  "source": {
+    "type": "规范条文算例",
+    "standard": "JGJ 130-2011",
+    "basis": "data/knowledge/clauses/{jgj130_clauses,formulas,thresholds}.json（status=已核对）",
+    "recalc_tool": "tools/gen_examples.py",
+    "fetched": "2026-10-06"
+  },
+  "input_card": {
+    "category": "coupler_steel_pipe_scaffold",
+    "build_height_m": 24.0,
+    "step_m": 1.8,
+    "long_spacing_m": 1.8,
+    "cross_spacing_m": 1.55,
+    "wall_tie": "three_step_three_span",
+    "pipe_spec": "48.3x3.6",
+    "steel_grade": "Q235A",
+    "wind": "不组合",
+    "loads": {
+      "gk_struct_kN_per_m": 0.1389,
+      "board_kN_per_m2": 0.3,
+      "board_layers": 4,
+      "rail_kN_per_m": 0.16,
+      "safety_net_kN_per_m2": 0.01,
+      "live_kN_per_m2": 3.0
+    },
+    "model_notes": [
+      "同 EX-lizhigan-nw-001 负担模型；μ=1.80（表5.2.8 三步三跨 lb=1.55）",
+      "本例设计为应力比>1 的不合格路径（σ>f）"
+    ]
+  },
+  "expect": {
+    "checks": [
+      {
+        "item": "lizhigan_stability",
+        "ratio": 1.0133,
+        "tolerance": 0.01,
+        "verdict": "fail"
+      }
+    ],
+    "intermediate": {
+      "NG1k_kN": 3.3336,
+      "NG2k_kN": 3.258,
+      "NQk_kN": 4.185,
+      "N_design_kN": 13.7689,
+      "lambda": 235.3585,
+      "phi": 0.131,
+      "sigma_N_per_mm2": 207.7199,
+      "f": 205.0
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "also_expect": [],
+  "clean_baseline": false,
+  "fixture_id": "SY-brace-missing-02",
+  "injection": "brace_missing",
+  "main_expect": [
+    {
+      "check_type": "presence",
+      "clause_ref": "JGJ130-6.6.2",
+      "param": "scissor_brace",
+      "rule_id": "R-brace-presence",
+      "verdict": "violation"
+    }
+  ]
+}

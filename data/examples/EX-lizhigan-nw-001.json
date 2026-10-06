@@ -1,0 +1,58 @@
+{
+  "example_id": "EX-lizhigan-nw-001",
+  "title": "立杆稳定性（不组合风）落地双排装修架",
+  "module": "M-1",
+  "source": {
+    "type": "规范条文算例",
+    "standard": "JGJ 130-2011",
+    "basis": "data/knowledge/clauses/{jgj130_clauses,formulas,thresholds}.json（status=已核对）",
+    "recalc_tool": "tools/gen_examples.py",
+    "fetched": "2026-10-06"
+  },
+  "input_card": {
+    "category": "coupler_steel_pipe_scaffold",
+    "build_height_m": 12.0,
+    "step_m": 1.8,
+    "long_spacing_m": 1.5,
+    "cross_spacing_m": 1.05,
+    "wall_tie": "two_step_three_span",
+    "pipe_spec": "48.3x3.6",
+    "steel_grade": "Q235A",
+    "wind": "不组合",
+    "loads": {
+      "gk_struct_kN_per_m": 0.1295,
+      "board_kN_per_m2": 0.3,
+      "board_layers": 2,
+      "rail_kN_per_m": 0.16,
+      "safety_net_kN_per_m2": 0.01,
+      "live_kN_per_m2": 2.0
+    },
+    "model_notes": [
+      "脚手板每层负担面积=la×lb/2（内外立杆各半）",
+      "栏杆挡脚板道数=脚手板层数，线荷载×la",
+      "安全网 0.01 kN/m² × la × H（外立面全高）",
+      "μ=1.50（表5.2.8 二步三跨 lb=1.05）；λ=ceil(l0/i) 查表A.0.6"
+    ]
+  },
+  "expect": {
+    "checks": [
+      {
+        "item": "lizhigan_stability",
+        "ratio": 0.2814,
+        "tolerance": 0.01,
+        "verdict": "pass"
+      }
+    ],
+    "intermediate": {
+      "NG1k_kN": 1.554,
+      "NG2k_kN": 1.1325,
+      "NQk_kN": 1.575,
+      "N_design_kN": 5.4288,
+      "l0_mm": 3118.5,
+      "lambda": 196.1321,
+      "phi": 0.186,
+      "sigma_N_per_mm2": 57.682,
+      "f": 205.0
+    }
+  }
+}

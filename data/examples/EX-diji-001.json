@@ -1,0 +1,44 @@
+{
+  "example_id": "EX-diji-001",
+  "title": "立杆地基承载力（回填土）",
+  "module": "M-5",
+  "source": {
+    "type": "规范条文算例",
+    "standard": "JGJ 130-2011",
+    "basis": "data/knowledge/clauses/{jgj130_clauses,formulas,thresholds}.json（status=已核对）",
+    "recalc_tool": "tools/gen_examples.py",
+    "fetched": "2026-10-06"
+  },
+  "input_card": {
+    "category": "coupler_steel_pipe_scaffold",
+    "foundation": {
+      "type": "回填土",
+      "fgk_kPa": 180.0,
+      "reduction": 0.4,
+      "pad_m": [
+        0.4,
+        0.2
+      ]
+    },
+    "loads_note": "Nk 取 EX-lizhigan-nw-001 同参数标准组合（永久+施工，分项系数 1.0）",
+    "model_notes": [
+      "pk=Nk/A≤fg（式5.5.1）；fg=fgk×0.4（回填土，5.5.2）"
+    ]
+  },
+  "expect": {
+    "checks": [
+      {
+        "item": "foundation_bearing",
+        "ratio": 0.7398,
+        "tolerance": 0.01,
+        "verdict": "pass"
+      }
+    ],
+    "intermediate": {
+      "Nk_kN": 4.2615,
+      "A_m2": 0.08,
+      "pk_kPa": 53.2687,
+      "fg_kPa": 72.0
+    }
+  }
+}

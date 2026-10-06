@@ -1,6 +1,8 @@
 # HANDOFF M0 → M1（交接快照，2026-10-06）
 
-> 续接方式：新对话输入 `/goal 读取 "<项目绝对路径>\plan\HANDOFF-M1.md" 继续完成任务`
+> **⚠️ 已过时仅作历史**：M1 已于 2026-10-07 完成（DoD 复核见本文件末尾追加节），续接请读 [HANDOFF-M2.md](HANDOFF-M2.md)。本文件保留 M0→M1 的交接口径与 M0 DoD 记录。
+
+> 续接方式：新对话输入 `/goal 读取 "<项目绝对路径>\plan\HANDOFF-M<n>.md" 继续完成任务`
 > （路径由用户侧拼绝对路径；本文件内一律相对路径）。
 
 ## 1. 当前进度
@@ -66,3 +68,19 @@ pwd && git log --oneline -1 && git remote -v
 - [x] 决策记录 13 条（含缓议 2 条：真实赛事窗口 M6 清零、GIF 工具 M5 定）
 - [x] data/ 目录骨架与台账规则就位，raw/ 版权红线 gitignore 生效
 - [x] 本 HANDOFF 落盘（相对路径用法行）
+
+---
+
+## 7. M1 完成追加节（2026-10-07）
+
+M1 待办 7 项全部完成：
+
+1. ✅ 规范原文获取：37号令（mohurd 官方规章库直连，现行修正版）、31号文（mohurd 官方文件库正文 + waizi 全文含附件1/2 + 深圳gov附件2 双渠道）、JGJ130-2011/JGJ162-2008（品茗规范库全文 HTML + 99/132 张表格公式原图）；全部落盘 `data/knowledge/raw/`（gitignored），sha256 登记台账
+2. ✅ 条款库 JSON：74 条款（JGJ130×44 / JGJ162×15 / 37号令×7 / 31号文×8）+ 公式表 22 + 阈值表 34；5 验算模块所需条目全部 status=已核对（唯一待核对=F-J162-sidepressure，首期模块不依赖）
+3. ✅ 危大阈值清单 `data/knowledge/clauses/panorama.json`：9 条目逐条挂原文摘录，落地式 24m/50m 边界语义钉死
+4. ✅ 算例真值库 13 例（≥10）：覆盖 M-1~M-6 全模块+2 条不合格路径；教材算例四渠道受限实录后按纪律降级（规范条文算例为主力，复算脚本 tools/gen_examples.py 断言）
+5. ✅ 合成方案生成器 v1：src/scaffold_formwork_checker/synth/（SplitMix64 + 5 类注入 + 干净对照）+ 12 冻结 fixtures（无时间戳 docx）
+6. ✅ 字节冻结守门：tests/test_synth_freeze.py（RNG 序列锁/两次构建位级一致/仓库 fixtures 位级复现/无时间戳/真值语义）+ tests/test_eol_gate.py（全树文本 CR 门）
+7. ✅ 台账回填 + plan/00/05/06 回写 + 本文件标注过时 + HANDOFF-M2 落盘
+
+测试基线：M0 8 passed → M1 收尾 **32 passed**（Python 3.8.8 venv），CLI 三通路复验通过。

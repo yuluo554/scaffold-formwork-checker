@@ -1,0 +1,383 @@
+{
+  "meta": {
+    "purpose": "阈值/取值表：M2 引擎数值源 + M3 核查规则 limit_ref 指向。分表管理：本文件=JGJ 130/162 构造与计算取值；危大分级阈值见 panorama.json。",
+    "discipline": "status=待核对 的数值不得进入计算路径。表值均转录自原文文本或原文表格图（raw/）。查表类条目（phi/gk/mu）同时登记引擎取值方式。",
+    "lookup_tables_note": "phi_table/gk_table/mu_table 的完整数值矩阵存放于 engine M2 的查表模块（从原文表图转录），此处登记关键锚点值供测试对账。"
+  },
+  "thresholds": [
+    {
+      "threshold_id": "T-JGJ130-section-props",
+      "param": "pipe_section_48.3x3.6",
+      "op": "=",
+      "value": {"A_mm2": 506, "I_mm4": 127100, "W_mm3": 5260, "i_mm": 15.9, "mass_kg_per_m": 3.97},
+      "unit": "mm 系",
+      "condition": "φ48.3×3.6 Q235 钢管（外径48.3，壁厚3.6，内径41.1）",
+      "clause_ref": "JGJ130-B.0.1",
+      "status": "已核对",
+      "verify": "A/I/W/i 已按 A=π/4(D²-d²)、I=π/64(D⁴-d⁴)、W=2I/D、i=√(I/A) 独立复算一致（505.5/127083/5261/15.85 四舍五入吻合）"
+    },
+    {
+      "threshold_id": "T-JGJ130-steel-design",
+      "param": "steel_f",
+      "op": "=",
+      "value": 205,
+      "unit": "N/mm²",
+      "condition": "Q235 钢抗拉/抗压/抗弯强度设计值（脚手架构件）；弹性模量 E=2.06×10⁵ N/mm²",
+      "clause_ref": "JGJ130-5.1.6",
+      "status": "已核对",
+      "verify": null
+    },
+    {
+      "threshold_id": "T-JGJ162-steel-design",
+      "param": "steel_f",
+      "op": "=",
+      "value": 215,
+      "unit": "N/mm²",
+      "condition": "Q235 钢（t≤16mm）抗拉/抗压/抗弯强度设计值（模板支架钢结构，JGJ162 附录A表A.1.1-1）；fv=125 N/mm²",
+      "clause_ref": "JGJ162-A.1.1-1",
+      "status": "已核对",
+      "verify": "与 JGJ130 的 205 属不同规范取值，两模块不得混用"
+    },
+    {
+      "threshold_id": "T-JGJ130-coupler-capacity",
+      "param": "coupler_Rc",
+      "op": "=",
+      "value": {"直角扣件抗滑": 8.0, "旋转扣件抗滑": 8.0, "对接扣件抗滑": 3.2, "底座受压": 40.0, "可调托撑受压": 40.0},
+      "unit": "kN",
+      "condition": "扣件、底座、可调托撑承载力设计值（表5.1.7）",
+      "clause_ref": "JGJ130-5.1.7",
+      "status": "已核对",
+      "verify": null
+    },
+    {
+      "threshold_id": "T-JGJ130-deflection-limits",
+      "param": "allowable_deflection",
+      "op": "<=",
+      "value": {"脚手板及纵横水平杆": "min(l/150, 10mm)", "脚手架悬挑受弯杆件": "l/400", "型钢悬挑脚手架悬挑钢梁": "l/250"},
+      "unit": "mm",
+      "condition": "l=受弯构件跨度（悬挑杆件 l 取悬伸长度 2 倍）",
+      "clause_ref": "JGJ130-5.1.8",
+      "status": "已核对",
+      "verify": null
+    },
+    {
+      "threshold_id": "T-JGJ162-deflection-limits",
+      "param": "allowable_deflection",
+      "op": "<=",
+      "value": {"结构表面外露模板": "l/400", "结构表面隐蔽模板": "l/250", "支架压缩变形或弹性挠度": "l/1000"},
+      "unit": "-",
+      "condition": "模板及其支架刚度验算（l=计算跨度）",
+      "clause_ref": "JGJ162-4.4.1",
+      "status": "已核对",
+      "verify": null
+    },
+    {
+      "threshold_id": "T-JGJ130-slenderness",
+      "param": "allowable_slenderness",
+      "op": "<=",
+      "value": {"立杆_双排架": 210, "立杆_满堂支撑架": 210, "立杆_单排架": 230, "立杆_满堂脚手架": 250, "横向斜撑剪刀撑压杆": 250, "拉杆": 350},
+      "unit": "-",
+      "condition": "受压/受拉构件容许长细比（表5.1.9）；验算时 k=1",
+      "clause_ref": "JGJ130-5.1.9",
+      "status": "已核对",
+      "verify": null
+    },
+    {
+      "threshold_id": "T-JGJ162-slenderness",
+      "param": "allowable_slenderness",
+      "op": "<=",
+      "value": {"支架立柱及桁架": 150, "拉条缀条斜撑连系构件": 200, "受拉钢杆件": 350, "受拉木杆件": 250},
+      "unit": "-",
+      "condition": "模板结构构件长细比",
+      "clause_ref": "JGJ162-5.1.6",
+      "status": "已核对",
+      "verify": null
+    },
+    {
+      "threshold_id": "T-JGJ130-mu-coef",
+      "param": "mu_length_coefficient",
+      "op": "=",
+      "value": {"双排_连墙件二步三跨": {"lb=1.05": 1.50, "lb=1.30": 1.55, "lb=1.55": 1.60}, "双排_连墙件三步三跨": {"lb=1.05": 1.70, "lb=1.30": 1.75, "lb=1.55": 1.80}, "单排_lb≤1.50": {"二步三跨": 1.80, "三步三跨": 2.00}},
+      "unit": "-",
+      "condition": "单、双排脚手架立杆计算长度系数 μ（表5.2.8，按连墙件布置与立杆横距 lb 取值）",
+      "clause_ref": "JGJ130-5.2.8",
+      "status": "已核对",
+      "verify": "k=1.155（同条款）"
+    },
+    {
+      "threshold_id": "T-JGJ130-phi-table",
+      "param": "phi_stability_factor",
+      "op": "=",
+      "value": {"lookup": "λ(0~250 每档) → φ", "锚点": {"λ=80": 0.722, "λ=100": 0.588, "λ=150": 0.308, "λ=200": 0.180, "λ=250": 0.117}, "λ>250": "φ=7320/λ²"},
+      "unit": "-",
+      "condition": "轴心受压构件稳定系数（Q235，表A.0.6；=GB50017 b 类曲线）。JGJ162 附录D 表D 同源同值",
+      "clause_ref": "JGJ130-A.0.6",
+      "status": "已核对",
+      "verify": "完整 251 档矩阵在 M2 查表模块从原文表图转录；禁止线性插入（规范表为离散档）"
+    },
+    {
+      "threshold_id": "T-JGJ130-gk-table",
+      "param": "gk_per_meter",
+      "op": "=",
+      "value": {"lookup": "步距h×纵距la → gk(kN/m)，单排/双排分列，中间值线性插入", "锚点_双排": {"h=1.50,la=1.50": 0.1444, "h=1.50,la=1.80": 0.1552, "h=1.80,la=1.50": 0.1295, "h=1.80,la=1.80": 0.1389, "h=1.20,la=1.20": 0.1538, "h=2.00,la=2.10": 0.1394}},
+      "unit": "kN/m",
+      "condition": "单、双排脚手架立杆每米结构自重标准值（表A.0.1；扣件自重按表A.0.4）",
+      "clause_ref": "JGJ130-A.0.1",
+      "status": "已核对",
+      "verify": "完整矩阵在 M2 查表模块转录"
+    },
+    {
+      "threshold_id": "T-JGJ130-dead-loads",
+      "param": "dead_load_standard_values",
+      "op": "=",
+      "value": {"冲压钢脚手板": 0.30, "竹串片脚手板": 0.35, "木脚手板": 0.35, "竹笆脚手板": 0.10, "栏杆冲压钢挡板": 0.16, "栏杆竹串片挡板": 0.17, "栏杆木挡板": 0.17, "密目安全立网": "≥0.01"},
+      "unit": "kN/m²",
+      "condition": "脚手板/栏杆挡脚板/安全网自重标准值（表4.2.1-1/-2）",
+      "clause_ref": "JGJ130-4.2.1",
+      "status": "已核对",
+      "verify": null
+    },
+    {
+      "threshold_id": "T-JGJ130-live-loads",
+      "param": "live_load_standard_values",
+      "op": ">=",
+      "value": {"装修脚手架": 2.0, "混凝土砌筑结构脚手架": 3.0, "轻型钢结构脚手架": 2.0, "普通钢结构脚手架": 3.0, "斜道": 2.0, "双排两操作层同跨总和上限": 5.0},
+      "unit": "kN/m²",
+      "condition": "施工均布荷载标准值（表4.2.2；总和上限为 ≤ 语义见 4.2.3）",
+      "clause_ref": "JGJ130-4.2.2",
+      "status": "已核对",
+      "verify": null
+    },
+    {
+      "threshold_id": "T-JGJ130-load-combo",
+      "param": "load_combination",
+      "op": "=",
+      "value": {"水平杆承载与变形": "永久+施工", "立杆稳定": ["1.2(永久)+1.4(施工)", "1.2(永久)+0.9×1.4(施工+风)"], "立杆地基": "永久+施工", "连墙件": "风荷载+2.0(单排)/3.0(双排)kN", "分项系数": {"永久": 1.2, "可变": 1.4, "挠度标准组合": 1.0}},
+      "unit": "-",
+      "condition": "荷载效应组合（表4.3.1）",
+      "clause_ref": "JGJ130-4.3.1",
+      "status": "已核对",
+      "verify": null
+    },
+    {
+      "threshold_id": "T-JGJ162-partial-factors",
+      "param": "partial_factors",
+      "op": "=",
+      "value": {"永久荷载_不利_可变控制": 1.2, "永久荷载_不利_永久控制": 1.35, "永久荷载_有利": 1.0, "倾覆滑移验算": 0.9, "可变荷载_一般": 1.4, "可变荷载_标准值大于4kN/m2": 1.3, "风荷载": 1.4, "结构重要性系数γ0": 0.9, "组合值系数ψc": 0.7, "钢面板及支架荷载折减": 0.95},
+      "unit": "-",
+      "condition": "荷载分项系数（表4.2.3）+ 4.2.4 折减 + 4.3.1 表达式",
+      "clause_ref": "JGJ162-4.2.3",
+      "status": "已核对",
+      "verify": null
+    },
+    {
+      "threshold_id": "T-JGJ162-dead-loads",
+      "param": "formwork_dead_loads",
+      "op": "=",
+      "value": {"模板自重_木_平板及小梁": 0.30, "模板自重_木_楼板模板": 0.50, "模板自重_木_楼板模板及其支架(层高4m以下)": 0.75, "模板自重_定型组合钢模板_平板及小梁": 0.50, "模板自重_定型组合钢模板_楼板模板": 0.75, "模板自重_定型组合钢模板_楼板模板及其支架(层高4m以下)": 1.10, "新浇混凝土自重_普通": 24.0, "钢筋自重_楼板": 1.1, "钢筋自重_梁": 1.5},
+      "unit": "kN/m²、kN/m³",
+      "condition": "模板及支架自重（表4.1.1）、混凝土自重、钢筋自重（4.1.1）",
+      "clause_ref": "JGJ162-4.1.1",
+      "status": "已核对",
+      "verify": null
+    },
+    {
+      "threshold_id": "T-JGJ162-live-loads",
+      "param": "formwork_live_loads",
+      "op": "=",
+      "value": {"Q1k_计算模板及小梁": 2.5, "Q1k_计算主梁": 1.5, "Q1k_计算支架立柱": 1.0, "Q1k_布料机上料": 4.0, "Q2k_振捣_水平面模板": 2.0, "Q2k_振捣_垂直面模板": 4.0},
+      "unit": "kN/m²",
+      "condition": "施工人员及设备荷载、振捣荷载（4.1.2）；计算模板及小梁时另以集中荷载 2.5kN 验算取大值",
+      "clause_ref": "JGJ162-4.1.2",
+      "status": "已核对",
+      "verify": null
+    },
+    {
+      "threshold_id": "T-JGJ162-load-combo",
+      "param": "load_combination",
+      "op": "=",
+      "value": {"平板薄壳模板及支架_承载": "G1k+G2k+G3k+Q1k", "平板薄壳模板及支架_挠度": "G1k+G2k+G3k", "梁拱底板及支架_承载": "G1k+G2k+G3k+Q2k", "梁拱底板及支架_挠度": "G1k+G2k+G3k", "侧面模板_边长柱≤300墙厚≤100": "G4k+Q2k", "侧面模板_大体积柱墙": "G4k+Q3k"},
+      "unit": "-",
+      "condition": "荷载效应组合（表4.3.2）",
+      "clause_ref": "JGJ162-4.3.2",
+      "status": "已核对",
+      "verify": null
+    },
+    {
+      "threshold_id": "T-JGJ162-column-step",
+      "param": "column_max_step",
+      "op": "<=",
+      "value": 1.8,
+      "unit": "m",
+      "condition": "扣件式钢管立柱计算长度取纵横向水平拉杆最大步距，最大步距不得大于 1.8m；步距相同时采用底层步距",
+      "clause_ref": "JGJ162-5.2.5",
+      "status": "已核对",
+      "verify": null
+    },
+    {
+      "threshold_id": "T-JGJ162-column-construction",
+      "param": "column_construction",
+      "op": "=",
+      "value": {"偏心": "严禁，荷载直接作用于立杆轴线，按单立杆轴心受压", "钢管初始弯曲率": "<=1/1000", "群柱高宽比(露天)": "<=5，超过须加抛撑或缆风绳"},
+      "unit": "-",
+      "condition": "扣件式钢管脚手架作支架立柱构造（5.1.7）",
+      "clause_ref": "JGJ162-5.1.7",
+      "status": "已核对",
+      "verify": null
+    },
+    {
+      "threshold_id": "T-JGJ162-fg-reduction",
+      "param": "mf_foundation_reduction",
+      "op": "=",
+      "value": {"碎石土砂土多年填积土_原土": 0.8, "碎石土砂土多年填积土_回填土": 0.4, "粉土黏土_原土": 0.9, "粉土黏土_回填土": 0.5, "岩石混凝土_原土": 1.0},
+      "unit": "-",
+      "condition": "立柱垫木地基土承载力折减系数（表5.2.6）；p=N/A≤mf·fak",
+      "clause_ref": "JGJ162-5.2.6",
+      "status": "已核对",
+      "verify": null
+    },
+    {
+      "threshold_id": "T-JGJ130-fg-reduction",
+      "param": "fg_foundation",
+      "op": "=",
+      "value": {"天然地基": "按地质勘察报告选用", "回填土地基": "勘察报告值×0.4", "其他": "载荷试验或工程经验确定"},
+      "unit": "kPa",
+      "condition": "地基承载力特征值取值（5.5.2）",
+      "clause_ref": "JGJ130-5.5.2",
+      "status": "已核对",
+      "verify": null
+    },
+    {
+      "threshold_id": "T-JGJ130-walltie-spacing",
+      "param": "wall_tie_spacing",
+      "op": "<=",
+      "value": {"双排落地_H≤50m": {"竖向": "3h", "水平": "3la", "每根覆盖面积_m2": 40}, "双排悬挑_H>50m": {"竖向": "2h", "水平": "3la", "每根覆盖面积_m2": 27}, "单排_H≤24m": {"竖向": "3h", "水平": "3la", "每根覆盖面积_m2": 40}},
+      "unit": "m / m²",
+      "condition": "连墙件布置最大间距（表6.4.2；h=步距，la=纵距）",
+      "clause_ref": "JGJ130-6.4.2",
+      "status": "已核对",
+      "verify": null
+    },
+    {
+      "threshold_id": "T-JGJ130-walltie-layout",
+      "param": "wall_tie_layout",
+      "op": "=",
+      "value": {"主节点偏离": "<=300mm", "起始位置": "底层第一步纵向水平杆处", "优先布置": "菱形（或方形、矩形）", "开口型两端": "必设，垂直间距≤层高且≤4m", "刚性连墙件": "H>24m 双排必须", "连墙杆方向": "水平设置，不能水平时向脚手架一端下斜连接"},
+      "unit": "-",
+      "condition": "连墙件布置（6.4.3/6.4.4/6.4.5/6.4.6）",
+      "clause_ref": "JGJ130-6.4.3",
+      "status": "已核对",
+      "verify": null
+    },
+    {
+      "threshold_id": "T-JGJ130-tie-N0",
+      "param": "wall_tie_N0",
+      "op": "=",
+      "value": {"单排架": 2.0, "双排架": 3.0},
+      "unit": "kN",
+      "condition": "连墙件约束脚手架平面外变形产生的轴向力（5.2.12）",
+      "clause_ref": "JGJ130-5.2.12",
+      "status": "已核对",
+      "verify": null
+    },
+    {
+      "threshold_id": "T-JGJ130-brace",
+      "param": "scissor_brace",
+      "op": "=",
+      "value": {"每道宽度": "≥4跨 且 ≥6m", "倾角": "45°~60°", "跨越立杆根数": {"45°": 7, "50°": 6, "60°": 5}, "24m及以上双排": "外侧全立面连续设置", "24m以下": "两端、转角及中间间隔≤15m 各一道，由底至顶连续", "接长": "搭接或对接", "扣件距离主节点": "<=150mm"},
+      "unit": "-",
+      "condition": "剪刀撑设置（6.6.2/6.6.3；表6.6.2）",
+      "clause_ref": "JGJ130-6.6.2",
+      "status": "已核对",
+      "verify": null
+    },
+    {
+      "threshold_id": "T-JGJ130-build-height",
+      "param": "scaffold_build_height",
+      "op": "=",
+      "value": {"单排": "≤24m（不应超过）", "双排": "≤50m（不宜超过；超过 50m 应分段搭设等措施）"},
+      "unit": "m",
+      "condition": "单、双排脚手架搭设高度（6.1.2）",
+      "clause_ref": "JGJ130-6.1.2",
+      "status": "已核对",
+      "verify": null
+    },
+    {
+      "threshold_id": "T-JGJ130-construction-dims",
+      "param": "common_design_dims",
+      "op": "=",
+      "value": {"双排_常用设计尺寸": "连墙件二步三跨/三步三跨 × lb=1.05/1.30/1.55 × h=1.50/1.80 → la 与[H]（表6.1.1-1）", "施工荷载档": ["2+0.35", "2+2+2×0.35", "3+0.35", "3+2+2×0.35"], "作业层横向水平杆间距": "≤la/2", "基本风压": "0.4kN/m²(粗糙度B类)"},
+      "unit": "m",
+      "condition": "常用密目式安全立网全封闭单、双排脚手架设计尺寸（表6.1.1-1/-2）；按 5.1.5 采用本条尺寸的杆件可不再设计计算（连墙件、立杆地基除外）",
+      "clause_ref": "JGJ130-6.1.1",
+      "status": "已核对",
+      "verify": "la/[H] 全矩阵在 M3 规则核查时按需从原文表图转录引用"
+    },
+    {
+      "threshold_id": "T-JGJ130-pipe-spec",
+      "param": "pipe_spec",
+      "op": "=",
+      "value": {"外径_mm": 48.3, "壁厚_mm": 3.6, "单根最大质量_kg": 25.8, "材质": "Q235（GB/T 13793 或 GB/T 3091）"},
+      "unit": "-",
+      "condition": "脚手架钢管（3.1.2）；壁厚按实际检查结果计算（JGJ162 5.1.7）",
+      "clause_ref": "JGJ130-3.1.2",
+      "status": "已核对",
+      "verify": null
+    },
+    {
+      "threshold_id": "T-JGJ130-eccentricity",
+      "param": "pole_eccentricity",
+      "op": "<=",
+      "value": 55,
+      "unit": "mm",
+      "condition": "水平杆轴线对立杆轴线偏心距不大于 55mm 时立杆稳定计算可忽略偏心（5.1.4）",
+      "clause_ref": "JGJ130-5.1.4",
+      "status": "已核对",
+      "verify": null
+    },
+    {
+      "threshold_id": "T-JGJ130-shape-coef",
+      "param": "wind_shape_coefficient",
+      "op": "=",
+      "value": {"全封闭半封闭_背靠全封闭墙": "1.0φ", "全封闭半封闭_背靠敞开框架开洞墙": "1.3φ", "敞开": "μstw（按GB50009桁架计算）", "挡风系数定义": "φ=1.2An/Aw", "密目网全封闭下限": "φ≥0.8"},
+      "unit": "-",
+      "condition": "风荷载体型系数（表4.2.6；4.2.7）",
+      "clause_ref": "JGJ130-4.2.6",
+      "status": "已核对",
+      "verify": null
+    },
+    {
+      "threshold_id": "T-37-expert-panel",
+      "param": "expert_panel_size",
+      "op": ">=",
+      "value": 5,
+      "unit": "名",
+      "condition": "超规模危大工程专家论证会专家人数（37号令第十二条）；专家从地方住建主管部门专家库选取，利害关系人回避",
+      "clause_ref": "37号令-第十二条",
+      "status": "已核对",
+      "verify": null
+    },
+    {
+      "threshold_id": "T-31-expert-qualification",
+      "param": "expert_qualification",
+      "op": "=",
+      "value": {"从业年限": "15年以上或具有丰富专业经验", "职称": "高级专业技术职称", "诚信": "诚实守信、作风正派、学术严谨"},
+      "unit": "-",
+      "condition": "专家库专家基本条件（31号文第八条）",
+      "clause_ref": "31号文-第八条",
+      "status": "已核对",
+      "verify": null
+    },
+    {
+      "threshold_id": "T-JGJ130-partial-factors",
+      "param": "partial_factors",
+      "op": "=",
+      "value": {"永久荷载": 1.2, "可变荷载": 1.4, "挠度标准组合": 1.0},
+      "unit": "-",
+      "condition": "荷载分项系数（5.1.2/5.1.3）",
+      "clause_ref": "JGJ130-5.1.2",
+      "status": "已核对",
+      "verify": null
+    }
+  ]
+}

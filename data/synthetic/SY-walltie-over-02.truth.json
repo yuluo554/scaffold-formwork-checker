@@ -1,0 +1,18 @@
+{
+  "also_expect": [],
+  "clean_baseline": false,
+  "fixture_id": "SY-walltie-over-02",
+  "injection": "walltie_over",
+  "main_expect": [
+    {
+      "actual": 6.0,
+      "check_type": "threshold",
+      "clause_ref": "JGJ130-6.4.2",
+      "limit_value": 5.4,
+      "op": "<=",
+      "param": "wall_tie_v",
+      "rule_id": "R-walltie-vspacing",
+      "verdict": "violation"
+    }
+  ]
+}

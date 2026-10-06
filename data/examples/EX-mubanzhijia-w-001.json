@@ -1,0 +1,57 @@
+{
+  "example_id": "EX-mubanzhijia-w-001",
+  "title": "模板支架立杆稳定性（组合风，室外露天，JGJ 162-2008）",
+  "module": "M-6",
+  "source": {
+    "type": "规范条文算例",
+    "standard": "JGJ 162-2008",
+    "basis": "data/knowledge/clauses/{jgj162_clauses,formulas,thresholds}.json（status=已核对）",
+    "recalc_tool": "tools/gen_examples.py",
+    "fetched": "2026-10-06"
+  },
+  "input_card": {
+    "category": "formwork_support",
+    "slab_thickness_m": 0.12,
+    "story_height_m": 3.9,
+    "step_m": 1.5,
+    "pole_spacing_m": [
+      1.0,
+      1.0
+    ],
+    "pipe_spec": "48.3x3.6",
+    "steel_grade": "Q235",
+    "wind": {
+      "wk_kN_per_m2": 0.3
+    },
+    "loads": {
+      "g1k_kN_per_m2": 0.75,
+      "concrete_kN_per_m3": 24.0,
+      "rebar_kN_per_m3_slab": 1.1,
+      "q1k_kN_per_m2": 1.0
+    },
+    "model_notes": [
+      "室外露天支模组合风（5.2.5-3 第2项）：式5.2.5-13/-14/-15",
+      "NQik 另加 Mw/lb；λ=ceil(l0/i)；f=215（表A.1.1-1）"
+    ]
+  },
+  "expect": {
+    "checks": [
+      {
+        "item": "column_stability",
+        "ratio": 0.1453,
+        "tolerance": 0.01,
+        "verdict": "pass"
+      }
+    ],
+    "intermediate": {
+      "Mwk_kNm": 0.0675,
+      "Mw_kNm": 0.0765,
+      "NQik_kN": 1.0765,
+      "Nw_kN": 5.2838,
+      "lambda": 95,
+      "phi": 0.626,
+      "sigma_N_per_mm2": 31.2331,
+      "f": 215.0
+    }
+  }
+}

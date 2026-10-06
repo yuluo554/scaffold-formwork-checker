@@ -1,0 +1,7 @@
+{
+  "also_expect": [],
+  "clean_baseline": true,
+  "fixture_id": "SY-clean-02",
+  "injection": "clean",
+  "main_expect": []
+}

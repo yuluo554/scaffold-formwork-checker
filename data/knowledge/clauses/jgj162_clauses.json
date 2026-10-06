@@ -1,0 +1,198 @@
+{
+  "meta": {
+    "standard": "JGJ 162-2008",
+    "full_name": "建筑施工模板安全技术规范",
+    "issue": "2008-08-06 发布，2008-12-01 实施，现行",
+    "retrieval": {
+      "channel": "品茗规范库 www.pmgd.cn（行业权威转载，HTML 全文+表格/公式原图）；关键表值（表4.1.1/4.2.3/4.3.2/5.2.6/A.1.1-1）经原文表格图视觉转录",
+      "fetched": "2026-10-06",
+      "raw_files": [
+        "JGJ162-2008_pmgd.cn_品茗规范库.html",
+        "JGJ162-2008_pmgd_imgs/（132 张表格/公式原图）"
+      ]
+    },
+    "discipline": "同 jgj130_clauses.json：要点+条款号+短摘录入库，全文只存 raw/；status=待核对 数值不得进入计算路径。"
+  },
+  "clauses": [
+    {
+      "clause_id": "JGJ162-4.1.1",
+      "standard": "JGJ 162-2008",
+      "clause_no": "4.1.1",
+      "title": "永久荷载标准值",
+      "gist": "G1k 模板及支架自重按设计图纸计算；楼板模板自重表4.1.1（木模板：平板及小梁0.30/楼板模板0.50/楼板模板及其支架(层高4m以下)0.75；定型组合钢模板：0.50/0.75/1.10，kN/m²）。G2k 新浇混凝土自重：普通混凝土 24kN/m³。G3k 钢筋自重：楼板 1.1kN/m³、梁 1.5kN/m³（每立方米钢筋混凝土）。G4k 新浇混凝土侧压力按式(4.1.1-1)/(4.1.1-2)取较小值【公式本体数值转录待核对】。",
+      "formula_refs": ["F-J162-sidepressure"],
+      "thresholds_ref": "T-JGJ162-dead-loads",
+      "status": "已核对",
+      "source": {"file": "JGJ162-2008_pmgd.cn_品茗规范库.html + 原文表图 1-240P1094FV16.jpg", "channel": "品茗规范库（权威转载）+表格图视觉转录", "fetched": "2026-10-06"},
+      "excerpt": "新浇筑混凝土自重标准值(G2k)，对普通混凝土可采用24kN／m3…楼板可取1.1kN；梁可取1.5kN。"
+    },
+    {
+      "clause_id": "JGJ162-4.1.2",
+      "standard": "JGJ 162-2008",
+      "clause_no": "4.1.2",
+      "title": "可变荷载标准值",
+      "gist": "Q1k 施工人员及设备荷载：计算模板及直接支承模板的小梁均布 2.5kN/m²（再以集中荷载 2.5kN 验算取大值）；计算直接支承小梁的主梁 1.5kN/m²；计算支架立柱及其他支承结构 1.0kN/m²；布料机上料 4kN/m²。Q2k 振捣混凝土荷载：水平面模板 2kN/m²、垂直面模板 4kN/m²。Q3k 倾倒混凝土水平荷载按表4.1.2【表值待核对】。",
+      "formula_refs": [],
+      "thresholds_ref": "T-JGJ162-live-loads",
+      "status": "已核对",
+      "source": {"file": "JGJ162-2008_pmgd.cn_品茗规范库.html", "channel": "品茗规范库（权威转载）", "fetched": "2026-10-06"},
+      "excerpt": "当计算支架立柱及其他支承结构构件时，均布活荷载标准值可取1.0kN／m2。"
+    },
+    {
+      "clause_id": "JGJ162-4.1.3",
+      "standard": "JGJ 162-2008",
+      "clause_no": "4.1.3",
+      "title": "风荷载标准值",
+      "gist": "按 GB 50009-2001(2006年版) 计算；基本风压按其附表 D.4 中 n=10 年规定采用，取风振系数 βz=1。",
+      "formula_refs": [],
+      "thresholds_ref": null,
+      "status": "已核对",
+      "source": {"file": "JGJ162-2008_pmgd.cn_品茗规范库.html", "channel": "品茗规范库（权威转载）", "fetched": "2026-10-06"},
+      "excerpt": "基本风压值应按该规范附表D.4中n＝10年的规定采用，并取风振系数βz＝1。"
+    },
+    {
+      "clause_id": "JGJ162-4.2.3",
+      "standard": "JGJ 162-2008",
+      "clause_no": "4.2.3",
+      "title": "荷载分项系数（表4.2.3）",
+      "gist": "永久荷载（G1k/G2k/G3k/G4k）分项系数：效应不利时——可变荷载效应控制组合取 1.2、永久荷载效应控制组合取 1.35；效应有利时一般取 1.0；倾覆/滑移验算取 0.9。可变荷载（Q1k/Q2k/Q3k）分项系数一般取 1.4，标准值大于 4kN/m² 的活荷载取 1.3。风荷载 wk 分项系数 1.4。",
+      "formula_refs": [],
+      "thresholds_ref": "T-JGJ162-partial-factors",
+      "status": "已核对",
+      "source": {"file": "JGJ162-2008_pmgd.cn_品茗规范库.html + 原文表图 1-240P1094G1414.jpg + 1-240P1094G2159.jpg", "channel": "品茗规范库（权威转载）+表格图视觉转录", "fetched": "2026-10-06"},
+      "excerpt": "当其效应对结构不利时：对由可变荷载效应控制的组合，应取1.2；对由永久荷载效应控制的组合，应取1.35。"
+    },
+    {
+      "clause_id": "JGJ162-4.2.4",
+      "standard": "JGJ 162-2008",
+      "clause_no": "4.2.4",
+      "title": "荷载设计值折减",
+      "gist": "钢面板及支架作用荷载设计值可乘以系数 0.95 折减；采用冷弯薄壁型钢时荷载设计值不应折减。",
+      "formula_refs": [],
+      "thresholds_ref": "T-JGJ162-partial-factors",
+      "status": "已核对",
+      "source": {"file": "JGJ162-2008_pmgd.cn_品茗规范库.html", "channel": "品茗规范库（权威转载）", "fetched": "2026-10-06"},
+      "excerpt": "钢面板及支架作用荷载设计值可乘以系数0.95进行折减。"
+    },
+    {
+      "clause_id": "JGJ162-4.3.1",
+      "standard": "JGJ 162-2008",
+      "clause_no": "4.3.1",
+      "title": "极限状态设计表达式",
+      "gist": "承载能力极限状态按基本组合：γ0·S ≤ R，结构重要性系数 γ0=0.9；可变荷载组合值系数 ψc 可取 0.7；正常使用极限状态采用标准组合。",
+      "formula_refs": [],
+      "thresholds_ref": null,
+      "status": "已核对",
+      "source": {"file": "JGJ162-2008_pmgd.cn_品茗规范库.html", "channel": "品茗规范库（权威转载）", "fetched": "2026-10-06"},
+      "excerpt": "r0——结构重要性系数，其值按0.9采用…其组合值系数可为0.7。"
+    },
+    {
+      "clause_id": "JGJ162-4.3.2",
+      "standard": "JGJ 162-2008",
+      "clause_no": "4.3.2",
+      "title": "荷载效应组合项目（表4.3.2）",
+      "gist": "①平板和薄壳的模板及支架：承载能力 G1k+G2k+G3k+Q1k，挠度 G1k+G2k+G3k；②梁和拱模板底板及支架：承载能力 G1k+G2k+G3k+Q2k，挠度 G1k+G2k+G3k；③梁拱柱(边长≤300mm)墙(厚≤100mm)侧面模板：G4k+Q2k（挠度 G4k）；④大体积结构、柱(边长>300mm)墙(厚>100mm)侧面模板：G4k+Q3k（挠度 G4k）。验算挠度用标准值，计算承载能力用设计值。",
+      "formula_refs": [],
+      "thresholds_ref": "T-JGJ162-load-combo",
+      "status": "已核对",
+      "source": {"file": "JGJ162-2008_pmgd.cn_品茗规范库.html + 原文表图 1-240P1094G45a.jpg + 1-240P1094G4531.jpg", "channel": "品茗规范库（权威转载）+表格图视觉转录", "fetched": "2026-10-06"},
+      "excerpt": "验算挠度应采用荷载标准值；计算承载能力应采用荷载设计值。"
+    },
+    {
+      "clause_id": "JGJ162-4.4.1",
+      "standard": "JGJ 162-2008",
+      "clause_no": "4.4.1",
+      "title": "模板及支架变形限值",
+      "gist": "结构表面外露的模板：计算跨度的 1/400；结构表面隐蔽的模板：1/250；支架的压缩变形或弹性挠度：相应结构计算跨度的 1/1000。",
+      "formula_refs": [],
+      "thresholds_ref": "T-JGJ162-deflection-limits",
+      "status": "已核对",
+      "source": {"file": "JGJ162-2008_pmgd.cn_品茗规范库.html", "channel": "品茗规范库（权威转载）", "fetched": "2026-10-06"},
+      "excerpt": "支架的压缩变形或弹性挠度，为相应的结构计算跨度的1／1000。"
+    },
+    {
+      "clause_id": "JGJ162-5.1.6",
+      "standard": "JGJ 162-2008",
+      "clause_no": "5.1.6",
+      "title": "模板结构构件长细比",
+      "gist": "受压构件：支架立柱及桁架 ≤150；拉条、缀条、斜撑等连系构件 ≤200。受拉构件：钢杆件 ≤350；木杆件 ≤250。",
+      "formula_refs": [],
+      "thresholds_ref": "T-JGJ162-slenderness",
+      "status": "已核对",
+      "source": {"file": "JGJ162-2008_pmgd.cn_品茗规范库.html", "channel": "品茗规范库（权威转载）", "fetched": "2026-10-06"},
+      "excerpt": "受压构件长细比：支架立柱及桁架，不应大于150；拉条、缀条、斜撑等连系构件，不应大于200"
+    },
+    {
+      "clause_id": "JGJ162-5.1.7",
+      "standard": "JGJ 162-2008",
+      "clause_no": "5.1.7",
+      "title": "扣件式钢管脚手架作支架立柱",
+      "gist": "承重支架柱荷载应直接作用于立杆轴线上，严禁承受偏心荷载，按单立杆轴心受压计算；钢管初始弯曲率不得大于 1/1000，壁厚按实际检查结果计算；露天支架立柱群柱架高宽比不应大于 5，超过时必须加设抛撑或缆风绳。",
+      "formula_refs": [],
+      "thresholds_ref": "T-JGJ162-column-construction",
+      "status": "已核对",
+      "source": {"file": "JGJ162-2008_pmgd.cn_品茗规范库.html", "channel": "品茗规范库（权威转载）", "fetched": "2026-10-06"},
+      "excerpt": "承重的支架柱，其荷载应直接作用于立杆的轴线上，严禁承受偏心荷载，并应按单立杆轴心受压计算"
+    },
+    {
+      "clause_id": "JGJ162-5.2.5",
+      "standard": "JGJ 162-2008",
+      "clause_no": "5.2.5（第3款）",
+      "title": "扣件式钢管立柱计算（M-6 模板支架立杆稳定核心条款）",
+      "gist": "①对接扣件连接的钢管立柱按单杆轴心受压构件计算（式5.2.5-10：N/(φA)≤f），计算长度取纵横向水平拉杆的最大步距，最大步距不得大于 1.8m，步距相同时采用底层步距；②室外露天支模组合风荷载时（式5.2.5-13：Nw/(φA)+Mw/W≤f；式5.2.5-14：Nw=0.9×(1.2ΣNGik+0.9×1.4ΣNQik)；式5.2.5-15：Mw=0.9²×1.4·wk·la·h²/10），NQik 另加 Mw/lb 值；h 纵横水平拉杆计算步距，la 立柱迎风面间距，lb 垂直迎风面方向立柱间距。",
+      "formula_refs": ["F-J162-column", "F-J162-column-w", "F-J162-Nw", "F-J162-Mw"],
+      "thresholds_ref": "T-JGJ162-column-step",
+      "status": "已核对",
+      "source": {"file": "JGJ162-2008_pmgd.cn_品茗规范库.html + 原文公式图 1-240P1094I2648.jpg + 1-240P1094I4525.jpg", "channel": "品茗规范库（权威转载）+公式图视觉转录", "fetched": "2026-10-06"},
+      "excerpt": "最大步距不得大于1.8m，步距相同时应采用底层步距"
+    },
+    {
+      "clause_id": "JGJ162-5.2.6",
+      "standard": "JGJ 162-2008",
+      "clause_no": "5.2.6",
+      "title": "立柱底地基承载力",
+      "gist": "p = N/A ≤ mf·fak。p 立柱底垫木底面平均压力，N 上部立柱传至垫木顶面轴向力设计值，A 垫木底面面积，fak 地基土承载力设计值（按 GB 50007 或地勘报告），mf 立柱垫木地基土承载力折减系数按表5.2.6：碎石土/砂土/多年填积土——原土0.8、回填土0.4；粉土/黏土——原土0.9、回填土0.5；岩石/混凝土——原土1.0、回填土—。",
+      "formula_refs": ["F-J162-foundation"],
+      "thresholds_ref": "T-JGJ162-fg-reduction",
+      "status": "已核对",
+      "source": {"file": "JGJ162-2008_pmgd.cn_品茗规范库.html + 原文表图 1-240P1094IC31.jpg", "channel": "品茗规范库（权威转载）+表格图视觉转录", "fetched": "2026-10-06"},
+      "excerpt": "mf——立柱垫木地基土承载力折减系数，应按表5.2.6采用。"
+    },
+    {
+      "clause_id": "JGJ162-A.1.1-1",
+      "standard": "JGJ 162-2008",
+      "clause_no": "附录A 表A.1.1-1",
+      "title": "钢材强度设计值",
+      "gist": "Q235 钢（厚度或直径≤16mm）：抗拉/抗压/抗弯 f=215 N/mm²，抗剪 fv=125 N/mm²，端面承压 fce=325 N/mm²；>16~40：f=205、fv=120；>40~60：f=200；>60~100：f=190。Q345：≤16 时 f=310。注意：模板支架钢结构按本表取值（与 JGJ 130-2011 脚手架 f=205 不同源）。",
+      "formula_refs": [],
+      "thresholds_ref": "T-JGJ162-steel-design",
+      "status": "已核对",
+      "source": {"file": "JGJ162-2008_pmgd_imgs/1-240P1094J2350.jpg（原文表图）", "channel": "品茗规范库（权威转载）+表格图视觉转录", "fetched": "2026-10-06"},
+      "excerpt": "Q235钢 ≤16：f 215，fv 125，fce 325（N/mm²）"
+    },
+    {
+      "clause_id": "JGJ162-A.1.3",
+      "standard": "JGJ 162-2008",
+      "clause_no": "附录A 表A.1.3",
+      "title": "钢材物理性能",
+      "gist": "弹性模量 E=2.06×10⁵ N/mm²；剪切模量 G=0.79×10⁵ N/mm²；线膨胀系数 α=12×10⁻⁶/度；质量密度 ρ=78.50 kN/m³。",
+      "formula_refs": [],
+      "thresholds_ref": "T-JGJ162-steel-design",
+      "status": "已核对",
+      "source": {"file": "JGJ162-2008_pmgd_imgs/1-240P1094J4349.jpg（原文表图）", "channel": "品茗规范库（权威转载）+表格图视觉转录", "fetched": "2026-10-06"},
+      "excerpt": "弹性模量E 2.06×10⁵（N/mm²）；质量密度ρ 78.50（kN/m³）"
+    },
+    {
+      "clause_id": "JGJ162-D",
+      "standard": "JGJ 162-2008",
+      "clause_no": "附录D 表D",
+      "title": "轴心受压构件稳定系数 φ",
+      "gist": "根据长细比 λ 与钢材屈服强度查附录D表D 求轴心受压构件稳定系数（GB 50017 系表，Q235 对应 b 类曲线）。数值与 JGJ 130-2011 附录A表A.0.6 同源一致（该表已逐档核对），按 JGJ130 表A.0.6 数值表执行；λ>250 按 φ=7320/λ²。",
+      "formula_refs": [],
+      "thresholds_ref": "T-JGJ130-phi-table",
+      "status": "已核对",
+      "source": {"file": "JGJ130-2011_pmgd_imgs/1-2309161F955U4.jpg + 1-2309161F955504.jpg（数值表核对载体）", "channel": "JGJ162 附录D 引用 GB50017 系表；数值按 JGJ130-2011 表A.0.6 原文图核对（同源）", "fetched": "2026-10-06"},
+      "excerpt": "φ——轴心受压杆件稳定系数。根据长细比(λ)值查本规范附录D（条文说明：附录D 系按 GB 50017 规定采用）"
+    }
+  ]
+}

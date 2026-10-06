@@ -1,0 +1,65 @@
+{
+  "example_id": "EX-lianqiangjian-002",
+  "title": "连墙件扣件抗滑不满足（不合格例）",
+  "module": "M-4",
+  "source": {
+    "type": "规范条文算例",
+    "standard": "JGJ 130-2011",
+    "basis": "data/knowledge/clauses/{jgj130_clauses,formulas,thresholds}.json（status=已核对）",
+    "recalc_tool": "tools/gen_examples.py",
+    "fetched": "2026-10-06"
+  },
+  "input_card": {
+    "category": "coupler_steel_pipe_scaffold",
+    "step_m": 1.8,
+    "long_spacing_m": 1.5,
+    "wall_tie": "two_step_three_span",
+    "tie_type": "steel_pipe_coupler",
+    "tie_length_m": 1.35,
+    "pipe_spec": "48.3x3.6",
+    "steel_grade": "Q235A",
+    "wind": {
+      "wk_kN_per_m2": 0.32
+    },
+    "model_notes": [
+      "Aw=3h×3la（表6.4.2 双排落地，覆盖面积≤40m² 本例 24.3 满足）",
+      "Nl=Nlw+N0（式5.2.12-3，双排 N0=3.0kN）",
+      "连墙件 φ48.3×3.6 钢管，两端铰接 l0=1.35m，λ=ceil(l0/i) 查表A.0.6",
+      "钢管扣件连墙件需验算扣件抗滑 R≤Rc=8.0kN（5.2.15）"
+    ]
+  },
+  "expect": {
+    "checks": [
+      {
+        "item": "tie_strength",
+        "ratio": 0.1575,
+        "tolerance": 0.01,
+        "verdict": "pass"
+      },
+      {
+        "item": "tie_stability",
+        "ratio": 0.2276,
+        "tolerance": 0.01,
+        "verdict": "pass"
+      },
+      {
+        "item": "antislip",
+        "ratio": 1.7358,
+        "tolerance": 0.01,
+        "verdict": "fail"
+      }
+    ],
+    "intermediate": {
+      "Aw_m2": 24.3,
+      "Nlw_kN": 10.8864,
+      "N0_kN": 3.0,
+      "Nl_kN": 13.8864,
+      "lambda": 85,
+      "phi": 0.692,
+      "sigma_strength_N_per_mm2": 27.4435,
+      "sigma_stab_N_per_mm2": 39.6582,
+      "f85_N_per_mm2": 174.25
+    },
+    "verdict_note": "整体判定=不合格（抗滑超限）；建议措施：双扣件/焊接连接或改为刚性连墙件并复算"
+  }
+}

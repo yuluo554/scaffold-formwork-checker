@@ -1,0 +1,29 @@
+{
+  "also_expect": [
+    {
+      "actual": 56.0,
+      "check_type": "grading",
+      "clause_ref": "pan-luodi-gangguan-24",
+      "level": "chaoguimo",
+      "note": "危大分级判定=超过一定规模（>=50m）",
+      "param": "build_height",
+      "rule_id": "G-pan-luodi-50",
+      "verdict": "triggered"
+    }
+  ],
+  "clean_baseline": false,
+  "fixture_id": "SY-grading-missing-01",
+  "injection": "grading_missing",
+  "main_expect": [
+    {
+      "actual": 56.0,
+      "check_type": "grading",
+      "clause_ref": "37号令-第十二条",
+      "level": "chaoguimo",
+      "note": "超过一定规模应专家论证而方案未标注论证安排",
+      "param": "build_height",
+      "rule_id": "R-grading-expert-review",
+      "verdict": "violation"
+    }
+  ]
+}

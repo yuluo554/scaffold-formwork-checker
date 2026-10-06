@@ -1,0 +1,53 @@
+{
+  "example_id": "EX-shuipinggan-zx-001",
+  "title": "纵向水平杆抗弯强度（三跨连续梁+跨中集中力）",
+  "module": "M-3",
+  "source": {
+    "type": "规范条文算例",
+    "standard": "JGJ 130-2011",
+    "basis": "data/knowledge/clauses/{jgj130_clauses,formulas,thresholds}.json（status=已核对）",
+    "recalc_tool": "tools/gen_examples.py",
+    "fetched": "2026-10-06"
+  },
+  "input_card": {
+    "category": "coupler_steel_pipe_scaffold",
+    "step_m": 1.8,
+    "long_spacing_m": 1.5,
+    "cross_spacing_m": 1.05,
+    "pipe_spec": "48.3x3.6",
+    "steel_grade": "Q235A",
+    "loads": {
+      "board_kN_per_m2": 0.3,
+      "live_kN_per_m2": 2.0
+    },
+    "model_notes": [
+      "三跨等跨连续梁（跨度 la），每跨跨中集中力 P=横向水平杆反力（5.2.4）",
+      "弯矩系数：支座 -0.150P·la、边跨跨中 0.175P·la、中跨跨中 0.100P·la（三弯矩方程导出）",
+      "内支座反力 R=1.15P（扣件抗滑 5.2.5）",
+      "挠度本例不设 check（连续梁挠度系数按《建筑结构静力计算手册》，M2 实现时另立参数扫描锁定单调性）"
+    ]
+  },
+  "expect": {
+    "checks": [
+      {
+        "item": "bending_strength",
+        "ratio": 0.6058,
+        "tolerance": 0.01,
+        "verdict": "pass"
+      },
+      {
+        "item": "antislip",
+        "ratio": 0.3577,
+        "tolerance": 0.01,
+        "verdict": "pass"
+      }
+    ],
+    "intermediate": {
+      "P_design_kN": 2.4885,
+      "M_design_kNm": 0.6532,
+      "sigma_N_per_mm2": 124.1885,
+      "R_kN": 2.8618,
+      "Rc_kN": 8.0
+    }
+  }
+}
