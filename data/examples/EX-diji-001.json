@@ -18,7 +18,8 @@
       "pad_m": [
         0.4,
         0.2
-      ]
+      ],
+      "nk_kN": 4.2615
     },
     "loads_note": "Nk 取 EX-lizhigan-nw-001 同参数标准组合（永久+施工，分项系数 1.0）",
     "model_notes": [

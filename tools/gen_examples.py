@@ -3,7 +3,7 @@
 
 用途：
 1. 按 data/knowledge/clauses/（formulas.json + thresholds.json，status=已核对）构造
-   12 个规范条文算例，覆盖 M-1/M-2/M-3/M-4/M-5/M-6 与不合格路径；
+   13 个规范条文算例，覆盖 M-1/M-2/M-3/M-4/M-5/M-6 与不合格路径；
 2. 每个算例全部中间量由本脚本按条款库数值现场计算并断言（防手算错）；
 3. 输出 data/examples/*.json（UTF-8 无 BOM，LF，无时间戳，字节确定）。
 
@@ -15,6 +15,9 @@
   边跨跨中 0.175P·la（三弯矩方程导出）、内支座反力 1.15P；
 - 横向水平杆模型：简支梁，跨度 l0=lb（图5.2.4 双排），承受均布 q（负担宽度=la）。
 
+M2 起：φ/gk 数值矩阵与 phi_of 复用 engine.tables（单一事实源，转录版完整 251 档）；
+input_card 含引擎路由字段（rows/member/tie 轴力显式值），数值期望不受影响。
+
 用法: py -X utf8 tools/gen_examples.py [--check]
   --check: 只复算断言，不写文件（守门测试用）
 """
@@ -22,6 +25,8 @@ import json
 import math
 import os
 import sys
+
+from scaffold_formwork_checker.engine import tables
 
 # ---- 已核对常数（thresholds.json）----
 A_MM2 = 506.0        # T-JGJ130-section-props（48.3x3.6）
@@ -33,21 +38,11 @@ F162 = 215.0         # T-JGJ162-steel-design
 E_STEEL = 206000.0   # N/mm²（表5.1.6 / JGJ162 表A.1.3）
 K_ADD = 1.155        # JGJ130-5.2.8
 
-# 表A.0.6 锚点档（原文表图视觉转录；完整 251 档在 M2 查表模块）
-# 行 80: 80=0.722,81=0.716,82=0.710,83=0.704,84=0.698,85=0.692
-# 行 90: 90=0.661,91=0.654,92=0.648,93=0.641,94=0.634,95=0.626
-# 行 190: 190=0.199,191=0.197,...,197=0.186
-# 行 230: ...,236=0.131,...
-PHI = {85: 0.692, 95: 0.626, 191: 0.197, 197: 0.186, 236: 0.131}
+# 表A.0.6 完整 251 档（M2 引擎转录版，原 M1 锚点集为其子集）
+PHI = tables.PHI_TABLE
 
-# 表A.0.1 gk（kN/m，双排）：步距h -> 纵距la -> gk（原文表图转录）
-GK_2PAI = {
-    1.20: {1.2: 0.1538, 1.5: 0.1667, 1.8: 0.1796, 2.0: 0.1882, 2.1: 0.1925},
-    1.35: {1.2: 0.1426, 1.5: 0.1543, 1.8: 0.1660, 2.0: 0.1739, 2.1: 0.1778},
-    1.50: {1.2: 0.1336, 1.5: 0.1444, 1.8: 0.1552, 2.0: 0.1624, 2.1: 0.1660},
-    1.80: {1.2: 0.1202, 1.5: 0.1295, 1.8: 0.1389, 2.0: 0.1451, 2.1: 0.1482},
-    2.00: {1.2: 0.1134, 1.5: 0.1221, 1.8: 0.1307, 2.0: 0.1365, 2.1: 0.1394},
-}
+# 表A.0.1 gk（kN/m，双排）：步距h -> 纵距la -> gk（原文表图转录，M2 引擎同源）
+GK_2PAI = tables.GK_TABLE["double"]
 
 SOURCE_130 = {
     "type": "规范条文算例",
@@ -106,7 +101,7 @@ def example_lizhigan_nw_001():
         "module": "M-1",
         "source": SOURCE_130,
         "input_card": {
-            "category": "coupler_steel_pipe_scaffold",
+            "category": "coupler_steel_pipe_scaffold", "rows": "double",
             "build_height_m": H, "step_m": h, "long_spacing_m": la,
             "cross_spacing_m": lb, "wall_tie": "two_step_three_span",
             "pipe_spec": "48.3x3.6", "steel_grade": "Q235A",
@@ -165,7 +160,7 @@ def example_lizhigan_w_001():
         "module": "M-2",
         "source": SOURCE_130,
         "input_card": {
-            "category": "coupler_steel_pipe_scaffold",
+            "category": "coupler_steel_pipe_scaffold", "rows": "double",
             "build_height_m": H, "step_m": h, "long_spacing_m": la,
             "cross_spacing_m": lb, "wall_tie": "two_step_three_span",
             "pipe_spec": "48.3x3.6", "steel_grade": "Q235A",
@@ -204,8 +199,9 @@ def example_lizhigan_w_002():
     n_design = 1.2 * ng_sum + 0.9 * 1.4 * nqk
     mwk = wk * 1.5 * (1.8 ** 2) / 10.0
     mw = 0.9 * 1.4 * mwk
-    lam = 197.0
-    phi = PHI[197]
+    l0 = K_ADD * 1.50 * 1.8 * 1000.0
+    lam = l0 / I_MM                 # 196.13（与 EX-lizhigan-nw-001 同几何同 λ；M2 修正：原记录误写档位号 197.0）
+    phi = phi_of(lam)               # ceil → 197 档 → 0.186
     sigma = n_design * 1000.0 / (phi * A_MM2) + (mw * 1e6) / W_MM3
     ratio = sigma / F130
     assert abs(wk - 0.0468) < 1e-12, wk
@@ -258,7 +254,7 @@ def example_lizhigan_nw_003_fail():
         "module": "M-1",
         "source": SOURCE_130,
         "input_card": {
-            "category": "coupler_steel_pipe_scaffold",
+            "category": "coupler_steel_pipe_scaffold", "rows": "double",
             "build_height_m": H, "step_m": h, "long_spacing_m": la,
             "cross_spacing_m": lb, "wall_tie": "three_step_three_span",
             "pipe_spec": "48.3x3.6", "steel_grade": "Q235A", "wind": "不组合",
@@ -308,7 +304,7 @@ def example_lizhigan_nw_002():
         "module": "M-1",
         "source": SOURCE_130,
         "input_card": {
-            "category": "coupler_steel_pipe_scaffold",
+            "category": "coupler_steel_pipe_scaffold", "rows": "double",
             "build_height_m": H, "step_m": h, "long_spacing_m": la,
             "cross_spacing_m": lb, "wall_tie": "three_step_three_span",
             "pipe_spec": "48.3x3.6", "steel_grade": "Q235A", "wind": "不组合",
@@ -351,7 +347,8 @@ def example_henggan_001():
         "module": "M-3",
         "source": SOURCE_130,
         "input_card": {
-            "category": "coupler_steel_pipe_scaffold",
+            "category": "coupler_steel_pipe_scaffold", "rows": "double",
+            "member": "cross",
             "step_m": 1.8, "long_spacing_m": la, "cross_spacing_m": lb,
             "pipe_spec": "48.3x3.6", "steel_grade": "Q235A",
             "loads": {"board_kN_per_m2": board_l, "live_kN_per_m2": q_live},
@@ -396,7 +393,8 @@ def example_zonggan_001():
         "module": "M-3",
         "source": SOURCE_130,
         "input_card": {
-            "category": "coupler_steel_pipe_scaffold",
+            "category": "coupler_steel_pipe_scaffold", "rows": "double",
+            "member": "long",
             "step_m": 1.8, "long_spacing_m": la, "cross_spacing_m": lb,
             "pipe_spec": "48.3x3.6", "steel_grade": "Q235A",
             "loads": {"board_kN_per_m2": board_l, "live_kN_per_m2": q_live},
@@ -443,7 +441,8 @@ def example_lianqiangjian_001():
         "module": "M-4",
         "source": SOURCE_130,
         "input_card": {
-            "category": "coupler_steel_pipe_scaffold",
+            "category": "coupler_steel_pipe_scaffold", "rows": "double",
+            "build_height_m": 12.0,
             "step_m": h, "long_spacing_m": la, "wall_tie": "two_step_three_span",
             "tie_type": "steel_pipe_coupler", "tie_length_m": tie_len,
             "pipe_spec": "48.3x3.6", "steel_grade": "Q235A",
@@ -528,7 +527,7 @@ def example_diji_001():
         "input_card": {
             "category": "coupler_steel_pipe_scaffold",
             "foundation": {"type": "回填土", "fgk_kPa": fgk, "reduction": reduction,
-                           "pad_m": [0.4, 0.2]},
+                           "pad_m": [0.4, 0.2], "nk_kN": nk},
             "loads_note": "Nk 取 EX-lizhigan-nw-001 同参数标准组合（永久+施工，分项系数 1.0）",
             "model_notes": ["pk=Nk/A≤fg（式5.5.1）；fg=fgk×0.4（回填土，5.5.2）"]
         },
@@ -645,8 +644,8 @@ def example_diji_162_001():
         "source": SOURCE_162,
         "input_card": {
             "category": "formwork_support",
-            "foundation": {"soil": "粉土、黏土", "on_backfill": False,
-                           "mf": mf, "fak_kPa": fak, "pad_m": [0.5, 0.2]},
+            "foundation": {"soil": "粉土、黏土", "on_backfill": False, "mf": mf,
+                           "fak_kPa": fak, "pad_m": [0.5, 0.2], "n_design_kN": 5.32296},
             "loads_note": "N 取 EX-mubanzhijia-nw-001 设计值（含 γ0=0.9）",
             "model_notes": ["p=N/A≤mf·fak（5.2.6）"]
         },

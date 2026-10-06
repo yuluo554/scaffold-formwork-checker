@@ -11,6 +11,8 @@
   },
   "input_card": {
     "category": "coupler_steel_pipe_scaffold",
+    "rows": "double",
+    "member": "cross",
     "step_m": 1.8,
     "long_spacing_m": 1.5,
     "cross_spacing_m": 1.05,

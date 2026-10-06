@@ -1,6 +1,6 @@
 # scaffold-formwork-checker
 
-🚧 **开发中（M0 骨架）** · 脚手架与模板支架安全验算及危大分级工具
+🚧 **开发中（M2 公式引擎完成）** · 脚手架与模板支架安全验算及危大分级工具
 
 [![CI](https://github.com/yuluo554/scaffold-formwork-checker/actions/workflows/ci.yml/badge.svg)](https://github.com/yuluo554/scaffold-formwork-checker/actions/workflows/ci.yml)
 
@@ -13,12 +13,12 @@
 
 ## 当前状态
 
-M0 可运行骨架（计划文档定稿 + CLI 骨架 + CI）。功能模块按里程碑推进，见下表；详细计划在 [plan/00-README总览.md](plan/00-README总览.md)。
+M2 公式引擎完成（`engine/` 5+1 验算模块 + 查表矩阵 + 条款库加载器待核对硬拦截 + `sfc calc`）。功能模块按里程碑推进，见下表；详细计划在 [plan/00-README总览.md](plan/00-README总览.md)。
 
 | 里程碑 | 内容 | 状态 |
 |---|---|---|
-| M1 | 数据先行：条款库（原文核对纪律）+ 危大阈值清单 + 算例真值库 + 合成方案生成器 | ⬜ |
-| M2 | 公式引擎：5 个验算模块，算例回归通过率 100% | ⬜ |
+| M1 | 数据先行：条款库（原文核对纪律）+ 危大阈值清单 + 算例真值库 + 合成方案生成器 | ✅ 2026-10-07 |
+| M2 | 公式引擎：5+1 验算模块，算例回归通过率 100% | ✅ 2026-10-07 |
 | M3 | 方案解析 + 构造限值核查 + 两张皮一致性检测 + 危大分级判定器 | ⬜ |
 | M4 | 内置基准 `sfc bench`（零 API 依赖）+ docx 报告导出 | ⬜ |
 | M5 | PySide6 桌面应用 + PyInstaller 双 exe | ⬜ |
@@ -37,6 +37,15 @@ py -m venv .venv
 .venv/Scripts/sfc --version
 .venv/Scripts/sfc selfcheck
 .venv/Scripts/python -m pytest tests -v
+```
+
+CLI 验算（参数卡 JSON，见 [data/examples/](data/examples/) 内各例 `input_card` 的形态）：
+
+```bash
+.venv/Scripts/sfc calc 参数卡.json                 # 自动识别模块（M-1~M-6）
+.venv/Scripts/sfc calc 参数卡.json --module M-1    # 显式指定模块
+# 输出：checks（item/expr/substituted/ratio/limit/verdict/clause_refs）+ detail（中间量）
+# 退出码：0=完成；1=降级完成（依据未核对被拦截）；2=输入不可用/参数错误
 ```
 
 Linux / macOS：
@@ -64,9 +73,17 @@ graph LR
 
 设计原则：数值结论永远来自确定性规则（零 LLM 通路）；未经原文核对（status）的条文数值不进入计算路径；CLI/GUI 消费同一引擎 API。详见 [plan/03-架构与技术选型.md](plan/03-架构与技术选型.md)。
 
-## 评测基准
+## 评测基准（初版，M4 起 `sfc bench` 一条命令复跑）
 
-⬜ M4 提供 `sfc bench`：算例真值通过率 / 合成方案检出率与误报率 / 危大分级准确率，零 API 依赖、固定 seed、可复现。指标达标后在此表格公开。
+**算例真值回归**（容差内，pytest 守门 `tests/test_engine_regression.py`）：
+
+| 套件 | 用例数 | 通过率 | 说明 |
+|---|---|---|---|
+| examples 算例回归 | 13 | **100%**（13/13） | 覆盖 M-1~M-6 全部主路径 + 2 条不合格路径；checks 比值容差内 + 中间量逐项对账 |
+| 参数扫描回归 | 10 组 | 单调性/边界全锁 | H/活载/步距/横距/风压等关键参数单调性 + λ=250 表档→公式边界 |
+| 条文纪律 | — | 拦截 100% | 任一依赖条目待核对 → 模块整体拒绝计算（双层拦截，测试锁死） |
+
+合成方案基准（检出率/误报率/F1）与危大分级准确率在 M3/M4 接入后填入本表。全部零 API、离线、确定性可复现。
 
 ## 目录
 

@@ -76,3 +76,15 @@ pwd && git log --oneline -1 && git remote -v
 - [x] ③fixtures CR 守门测试入仓（test_eol_gate.py 全树 CR 门 + 冻结目录非空校验）
 - [x] ④EOL/冻结纪律测试全绿（**32 passed** @3.8.8 venv，M0 基线 8 项不回退）
 - [x] 附加：CLI 三通路复验；raw/ gitignore 生效（git status 零泄漏）；教材算例偏差已留档（决策 #15）
+
+---
+
+## 7. M2 完成追加节（2026-10-07，本文件已转为历史快照）
+
+M2 全部落地，续接请读 [HANDOFF-M3.md](HANDOFF-M3.md)。要点：
+
+1. ✅ 查表模块 engine/tables.py：φ 全 251 档 / gk 全矩阵（单双排）/ μ / 表A.0.5，原文表图双读转录+锚点对账
+2. ✅ engine/ 5+1 验算模块（calc(card, kn) -> CalcResult，checks 带 expr/substituted/ratio/limit/verdict/clause_refs）
+3. ✅ 条款库加载器双层待核对硬拦截 + 参数卡构造时拒收 + sfc calc（模块自动识别，exit 0/1/2）
+4. ✅ 测试 32 → **115 passed**；13 例回归 100%（含中间量对账）；参数扫描单调性/边界锁定
+5. ✅ 偏差已留档（决策 #20/#21）：算例卡路由字段 + w-002 λ 记录修正 + 显式 data-dir 不回退

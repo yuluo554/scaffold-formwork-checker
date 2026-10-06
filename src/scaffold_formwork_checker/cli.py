@@ -6,10 +6,11 @@
   2 = 输入不可用 / 参数错误
 
 子命令随里程碑扩展：calc（M2 验算）、check/grade（M3 核查与分级）、
-report（M4 导出）、bench（M4 基准）。本文件只保留骨架可用的最小集。
+report（M4 导出）、bench（M4 基准）。
 """
 
 import argparse
+import json
 import os
 import sys
 
@@ -42,6 +43,16 @@ def build_parser() -> argparse.ArgumentParser:
     sub.add_parser(
         "selfcheck", help="运行环境自检：版本 / 解释器 / 可选依赖组 / 数据目录"
     )
+    p_calc = sub.add_parser(
+        "calc", help="验算：参数卡 JSON → 验算结果（应力比/结论/条款号）"
+    )
+    p_calc.add_argument("card", help="参数卡 JSON 文件路径")
+    p_calc.add_argument(
+        "--module", default=None,
+        help="验算模块 M-1~M-6（缺省按参数卡内容自动识别）",
+    )
+    p_calc.add_argument("--data-dir", default=None, help="数据目录（含 knowledge/clauses）")
+    p_calc.add_argument("--indent", type=int, default=2, help="输出 JSON 缩进（0=单行）")
     return parser
 
 
@@ -94,6 +105,43 @@ def _run_selfcheck() -> int:
     return EXIT_OK
 
 
+def _run_calc(args) -> int:
+    """sfc calc：参数卡 JSON → 验算结果。
+
+    退出码：0=完成；1=降级完成（模块因依据未核对被拦截，结果含说明）；
+    2=输入不可用/参数错误（文件缺失、JSON 坏、参数非法、条款库不可用、模块不识别）。
+    """
+    from .engine import CardError, KnowledgeError, detect_module, load_knowledge, run_calc
+
+    card_path = args.card
+    if not os.path.isfile(card_path):
+        print("参数卡文件不存在：%s" % card_path, file=sys.stderr)
+        return EXIT_INPUT_ERROR
+    try:
+        with open(card_path, encoding="utf-8") as f:
+            card_data = json.load(f)
+    except ValueError as exc:
+        print("参数卡 JSON 解析失败：%s" % exc, file=sys.stderr)
+        return EXIT_INPUT_ERROR
+    try:
+        knowledge = load_knowledge(args.data_dir)
+    except KnowledgeError as exc:
+        print("条款库不可用：%s" % exc, file=sys.stderr)
+        return EXIT_INPUT_ERROR
+    try:
+        module_id = args.module or detect_module(card_data if isinstance(card_data, dict) else {})
+        result = run_calc(module_id, card_data, knowledge)
+    except (CardError, KnowledgeError) as exc:
+        print("参数错误：%s" % exc, file=sys.stderr)
+        return EXIT_INPUT_ERROR
+    indent = None if args.indent == 0 else args.indent
+    print(json.dumps(result, ensure_ascii=False, indent=indent))
+    if result.get("status") == "blocked":
+        print("注意：%s" % result.get("status_note", ""), file=sys.stderr)
+        return EXIT_DEGRADED
+    return EXIT_OK
+
+
 def main(argv=None) -> int:
     _force_utf8_stdio()
     parser = build_parser()
@@ -101,6 +149,8 @@ def main(argv=None) -> int:
     args = parser.parse_args(argv)
     if args.command == "selfcheck":
         return _run_selfcheck()
+    if args.command == "calc":
+        return _run_calc(args)
     parser.print_help()
     return EXIT_INPUT_ERROR
 
