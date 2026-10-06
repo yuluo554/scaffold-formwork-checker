@@ -1,0 +1,10 @@
+# 行尾纪律：仓库统一 LF（字节冻结 fixtures / 跨机器可复现的前提）
+* text=auto eol=lf
+
+# 二进制类型显式声明（fixtures 与发布物）
+*.png binary
+*.gif binary
+*.jpg binary
+*.pdf binary
+*.docx binary
+*.exe binary

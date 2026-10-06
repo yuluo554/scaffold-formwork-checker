@@ -8,6 +8,8 @@ venv/
 build/
 dist/
 *.spec
+# M5 PyInstaller spec 入仓例外（tools/ 下白名单）
+!tools/*.spec
 
 # 数据库与运行产物
 *.db
@@ -15,6 +17,9 @@ dist/
 output/
 reports/
 *.log
+
+# 规范/文件原文全文：版权红线，只存本地（sha256 记 data/README.md 台账），不入公开仓
+data/knowledge/raw/
 
 # 环境与密钥
 .env

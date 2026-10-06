@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "scaffold-formwork-checker"
+version = "0.1.0"
+description = "脚手架与模板支架安全验算及危大分级工具（规范公式验算 + 专项方案文本核查 + 危大/超规模分级判定，CLI/桌面双通路，全离线）"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [{ name = "yuluo554" }]
+keywords = [
+    "scaffold",
+    "formwork",
+    "construction-safety",
+    "structural-calculation",
+    "jgj130",
+    "jgj162",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering",
+]
+# 核心引擎零依赖（确定性纯 Python）；可选能力走 extras
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+parse = ["python-docx>=0.8.11", "pypdf>=3"]
+report = ["python-docx>=0.8.11"]
+# PySide6 对 py3.8 上限 6.6.3.x：extras 只写下限不锁死小版本，M5 打包前实测锁定（见 plan/06 #7）
+gui = ["PySide6"]
+build = ["pyinstaller>=6"]
+
+[project.scripts]
+sfc = "scaffold_formwork_checker.cli:main"
+
+[project.urls]
+# GitHub 仓库地址于 M6 发布时补充（plan/06 #3）
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
