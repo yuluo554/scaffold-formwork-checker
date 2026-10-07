@@ -311,7 +311,13 @@ def _docx_bytes(scheme):
 
 
 def _normalize_zip(raw):
-    """重写 docx zip：固定条目时间戳、覆写 core/app 元数据（无时间戳纪律）。"""
+    """重写 docx zip：固定条目时间戳、覆写 core/app 元数据（无时间戳纪律）。
+
+    容器字节平台无关化（M6 CI 首跑实录）：ZipInfo.create_system 在 Unix 上默认 3、
+    Windows 上 0，central directory "version made by" 随生成平台漂移——冻结 fixture
+    的"任意平台重生成位级一致"要求固定 create_system=0、external_attr 常量，并改用
+    ZIP_STORED（不进 zlib，杜绝跨 zlib 版本的 deflate 流漂移）。
+    """
     src = zipfile.ZipFile(io.BytesIO(raw))
     try:
         infos = src.infolist()
@@ -319,11 +325,12 @@ def _normalize_zip(raw):
     finally:
         src.close()
     out = io.BytesIO()
-    with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
+    with zipfile.ZipFile(out, "w", zipfile.ZIP_STORED) as z:
         for info, data in payloads:
             zi = zipfile.ZipInfo(info.filename, date_time=_ZIP_DATE)
-            zi.compress_type = zipfile.ZIP_DEFLATED
-            zi.external_attr = info.external_attr
+            zi.compress_type = zipfile.ZIP_STORED
+            zi.create_system = 0
+            zi.external_attr = 0o600 << 16
             if info.filename == "docProps/core.xml":
                 data = _FIXED_CORE_XML
             elif info.filename == "docProps/app.xml":

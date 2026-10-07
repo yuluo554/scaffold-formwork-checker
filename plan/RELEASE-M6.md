@@ -69,7 +69,11 @@
 
 ## 6. CI 首跑（DoD ⑤）
 
-（待补）
+- **首跑实录（run 37564827066，push 109ff7c）**：windows 双矩阵 ✅；ubuntu 双矩阵 ❌ `tests/test_synth_freeze.py::test_repo_fixtures_regenerate_bit_identical`（"冻结 fixture 漂移: SY-brace-missing-01.docx"，首 diff 在索引 36695）——失败面=ubuntu 全挂+windows 全过，正指认跨平台字节冻结类问题（"首跑爆发环境差异"预言应验，诊断预算动用）。
+- **根因**：synth 生成器 `_normalize_zip` 重建 `ZipInfo` 时 `create_system` 取自当前平台（Windows=0 / Unix=3）→ docx central directory "version made by" 随生成平台漂移；冻结 fixtures 系 Windows 生成，ubuntu 重生成字节不等。首 diff 位置在文件尾部中央目录区、其前全部 deflate 流跨平台一致——正是容器元数据而非内容。
+- **修复（决策 #33）**：容器彻底平台无关化——`create_system=0` + `external_attr` 常量 + **ZIP_STORED**（不进 zlib，杜绝跨 zlib 版本的 deflate 流漂移，"任意平台重生成位级一致"无例外成立）；12 份 docx 按台账纪律程序化重生成（文本内容零变化、truth 不变），manifest/binary_whitelist sha256 同步，exe 重建+构建后断言 BUILD_CHECKS_OK，重打发布 zip。代价：docx 37KB→832KB（×12，repo 增 ~10MB），确定性优先。
+- **发布 zip sha256 留档**：`sfc-v1.0.0-windows-x64-onedir.zip`（52,146,146 字节）sha256=`a86dc495379be6b6719a990d45a0cb45a6bd1f32a8eac6b8792b573f69466145`；产物-源码同基线：`git diff 2a9658e(M5重写后)..HEAD -- src/` 为空（修复本身在 synth/generator.py 的容器层，重建后 dist 与 HEAD 对齐）。
+- 第 2 轮 run：（push 修复后补记）
 
 ## 7. Release/tag（DoD ⑥，经用户确认）
 

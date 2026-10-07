@@ -2,7 +2,7 @@
 
 > 规则（ai-tool-project-sprint 阶段1）：每份数据登记来源与许可；规范条目挂出处+status；程序化自制带真值数据是核心资产（固定 seed 可复现，可注入已知缺陷做配对评测）。`_private/` 目录不入仓。
 > **M1 起执行**：登记表逐文件登记（sha256=入仓文件指纹，重生成后同步更新本表）。
-> **里程碑变更记录**：M2 无变更；M3 thresholds.json 增补 2 条步距限值条目（条目 ×34→×36，文件数不变）；M4 无变更；M5 **无变更**（数据零改动；exe 打包入包数据=本台账入仓数据的白名单子集+包内 checks.json，sha256 对账断言见 tools/build_exe.py --check）；M6 无变更（发布门新增二进制白名单 tools/binary_whitelist.json，对 17 份入仓二进制 sha256 对账，synthetic docx 另与本表 manifest 登记值联动）。
+> **里程碑变更记录**：M2 无变更；M3 thresholds.json 增补 2 条步距限值条目（条目 ×34→×36，文件数不变）；M4 无变更；M5 **无变更**（数据零改动；exe 打包入包数据=本台账入仓数据的白名单子集+包内 checks.json，sha256 对账断言见 tools/build_exe.py --check）；M6 **容器平台无关化重生成**（CI 首跑 ubuntu 实录：docx zip 的 create_system 字段随生成平台漂移致冻结比对失败——synth 生成器改 ZIP_STORED+固定 create_system/external_attr，12 份 docx 全部重生成，sha256 同步更新 manifest 与 tools/binary_whitelist.json；文本内容零变化，truth 文件不变；重生成后 --check 位级一致）；M6 发布门新增二进制白名单 tools/binary_whitelist.json，对 17 份入仓二进制 sha256 对账，synthetic docx 另与本表 manifest 登记值联动。
 
 ## 目录结构
 
