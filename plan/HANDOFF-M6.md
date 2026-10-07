@@ -1,5 +1,7 @@
 # HANDOFF M5 → M6（交接快照，2026-10-07）
 
+> **终版收官（2026-10-07）：M6 已完成，v1.0.0 已发布，项目就地收束（决策 #34，不另写 HANDOFF-M7）**。
+> 复跑手册=README 快速开始；发布执行记录=plan/RELEASE-M6.md；末态基线=v1.0.0 tag 所指提交。
 > 续接方式：新对话输入 `/goal 读取 "<项目绝对路径>\plan\HANDOFF-M6.md" 继续完成任务`
 > （路径由用户侧拼绝对路径；本文件内一律相对路径）。
 
@@ -90,3 +92,13 @@ pwd && git log --oneline -1 && git remote -v
 - [x] ④dist 无禁区成分扫描 + 内嵌数据对账断言：BUILD_CHECKS_OK（全树禁区扫描 + 46 份 sha256 对账 + 白名单外多余检测；fake dist 正反用例）
 - [x] ⑤spec 白名单守门：datas 只准 build_datas、spec 文本无手写数据路径与禁区字面、hiddenimports 覆盖、`!tools/*.spec` 入仓
 - [x] 附加：304 passed 全绿（M4 基线 255 不回退）；bench 全达标；gen_* --check 位级一致；截图五张 + 技术报告落盘；版本 0.5.0
+
+## 7. M6 DoD 复核（发布门，逐项详证见 plan/RELEASE-M6.md）
+
+- [x] ①干净环境验证：终态历史复验 [dev] 292+2skip / [dev,gui] 313+1skip，对账 314 ✅（README 逐字跑通，skip 逐项归因）
+- [x] ②脱敏四步+产物本体扫描固化入仓（tools/desensitize_audit.py + 白名单 + 守门测试）：tracked/内容级/二进制样例/历史三扫/dist 字节扫描全 0 硬命中；系列表述公开性核实（前作全公开，保留，决策 #32）
+- [x] ③提交元数据邮箱：env-filter 全历史改写 GitHub noreply，字面值终验 0 命中（含留档自命中瑕疵实录与修正）
+- [x] ④建仓 gh repo create（无 --push）→ SSH push 一次成；公开仓 yuluo554/scaffold-formwork-checker
+- [x] ⑤CI 四矩阵绿（run2 37565860353；首跑抓 synth 冻结容器跨平台漂移真 bug，决策 #33 修复）；push=run 对账成立
+- [x] ⑥v1.0.0 tag+Release（经用户确认，决策 #34）：exe zip 附件 sha256 留档；缓议清零（#12/#13）
+- [x] ⑦收尾固化：README 状态行转正、plan 00/05/06 回写、就地收束（终版收官，不另写 HANDOFF-M7）；技术报告 docx 化跳过（#34）

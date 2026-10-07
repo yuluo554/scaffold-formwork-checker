@@ -1,6 +1,6 @@
 # scaffold-formwork-checker
 
-🚧 **开发中（M5 桌面交付完成，v0.5.0）** · 脚手架与模板支架安全验算及危大分级工具
+✅ **v1.0.0 已发布** · 脚手架与模板支架安全验算及危大分级工具（[Release 下载](https://github.com/yuluo554/scaffold-formwork-checker/releases/latest)）
 
 [![CI](https://github.com/yuluo554/scaffold-formwork-checker/actions/workflows/ci.yml/badge.svg)](https://github.com/yuluo554/scaffold-formwork-checker/actions/workflows/ci.yml)
 
@@ -14,7 +14,7 @@
 
 ## 当前状态
 
-M5 桌面交付完成（PySide6 五页签 GUI + `sfc gui`；PyInstaller onedir 双 exe，数据内嵌冻结分支 + spec 白名单 + 构建后禁区扫描/内嵌数据对账断言；中立目录+剥离 PATH 干净验证全过；314 tests 全绿）。功能模块按里程碑推进，见下表；详细计划在 [plan/00-README总览.md](plan/00-README总览.md)。
+**v1.0.0 已发布**（全部六个里程碑收官：数据先行 → 公式引擎 → 方案核查 → 基准+报告 → 桌面交付 → 脱敏发布；314 tests 全绿，CI 四矩阵 ubuntu/windows × 3.8/3.12）。详细计划在 [plan/00-README总览.md](plan/00-README总览.md)，发布门逐项留档在 [plan/RELEASE-M6.md](plan/RELEASE-M6.md)。
 
 | 里程碑 | 内容 | 状态 |
 |---|---|---|
@@ -23,7 +23,7 @@ M5 桌面交付完成（PySide6 五页签 GUI + `sfc gui`；PyInstaller onedir �
 | M3 | 方案解析 + 构造限值核查 + 两张皮一致性检测 + 危大分级判定器 | ✅ 2026-10-07 |
 | M4 | 内置基准 `sfc bench`（零 API 依赖）+ docx 报告导出 `sfc report` | ✅ 2026-10-07 |
 | M5 | PySide6 五页签 GUI（只消费引擎 API）+ PyInstaller 双 exe（数据内嵌+构建红线断言）+ 技术报告 | ✅ 2026-10-07 |
-| M6 | 脱敏发布 GitHub + Release（exe + 演示） | ⬜ |
+| M6 | 脱敏发布 GitHub + Release（exe + 演示） | ✅ 2026-10-07 |
 
 ## 快速开始（当前骨架）
 

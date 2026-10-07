@@ -65,7 +65,10 @@
 
 ## 5. 建仓与推送（DoD ④）
 
-（待补）
+- 前置：`ssh -T git@github.com` → "Hi yuluo554!"（SSH key 在位；push 含 .github/workflows/*，OAuth token 无 workflow scope 必被拒——按预案直走 SSH 通路）。
+- 建仓：`gh repo create yuluo554/scaffold-formwork-checker --public --description "…" --source . --remote origin`（**不带 --push**，规避半失败态）→ `git remote set-url origin git@github.com:yuluo554/scaffold-formwork-checker.git` → `git push -u origin main` 一次成。
+- 仓库 URL：https://github.com/yuluo554/scaffold-formwork-checker
+- 推送内容 = 邮箱改写后的全历史 8 提交（M0-M6）+ M6 发布准备提交。
 
 ## 6. CI 首跑（DoD ⑤）
 
@@ -73,9 +76,17 @@
 - **根因**：synth 生成器 `_normalize_zip` 重建 `ZipInfo` 时 `create_system` 取自当前平台（Windows=0 / Unix=3）→ docx central directory "version made by" 随生成平台漂移；冻结 fixtures 系 Windows 生成，ubuntu 重生成字节不等。首 diff 位置在文件尾部中央目录区、其前全部 deflate 流跨平台一致——正是容器元数据而非内容。
 - **修复（决策 #33）**：容器彻底平台无关化——`create_system=0` + `external_attr` 常量 + **ZIP_STORED**（不进 zlib，杜绝跨 zlib 版本的 deflate 流漂移，"任意平台重生成位级一致"无例外成立）；12 份 docx 按台账纪律程序化重生成（文本内容零变化、truth 不变），manifest/binary_whitelist sha256 同步，exe 重建+构建后断言 BUILD_CHECKS_OK，重打发布 zip。代价：docx 37KB→832KB（×12，repo 增 ~10MB），确定性优先。
 - **发布 zip sha256 留档**：`sfc-v1.0.0-windows-x64-onedir.zip`（52,146,146 字节）sha256=`a86dc495379be6b6719a990d45a0cb45a6bd1f32a8eac6b8792b573f69466145`；产物-源码同基线：`git diff 2a9658e(M5重写后)..HEAD -- src/` 为空（修复本身在 synth/generator.py 的容器层，重建后 dist 与 HEAD 对齐）。
-- 第 2 轮 run：（push 修复后补记）
+- **第 2 轮 run（37565860353，push 01f8412）**：**四矩阵全绿**（ubuntu/py3.8+py3.12、windows/py3.8+py3.12，2m24s）✅。push 数=run 数对账：2 push=2 run ✅（ci.yml 只配 push branches [main]+pull_request，未配 tag 触发——tag push 不产生 run，如实记录不虚构）。CI 守门测试从此常驻闸门。
 
 ## 7. Release/tag（DoD ⑥，经用户确认）
+
+- **拍板留档（决策 #34）**：用户确认按推荐默认执行——v1.0.0 正式发布 / topics 推荐组 / 决策 #12 关闭 / 技术报告 docx 化跳过 / HANDOFF-M6 就地收束。
+- 版本 0.5.0 → **1.0.0**（pyproject + `__init__.py`，test_version 守门；classifiers 转 Production/Stable）；版本变更后 **exe 重建**（exe 内 selfcheck 版本必须与 Release 一致）→ BUILD_CHECKS_OK → 重打 zip → sha256 更新本节。
+- 时序（①一次到位型）：终态回写提交（本文件+README 翻转+1.0.0+#12/#33/#34）→ push → CI 绿 → annotated tag v1.0.0 打在该提交 → `gh release create --notes-file`（评测表数值+演示命令+免责声明）+ exe zip 附件 → topics → 发布后复核（§8）。
+- 发布 zip：`sfc-v1.0.0-windows-x64-onedir.zip`（52,146,144 字节）sha256=`28eaa48dacd8d9140cf4c6683d883c72d576f725c4834fb0d81b6c080132fbf2`（1.0.0 重建版：exe 内嵌版本同步 1.0.0，BUILD_CHECKS_OK，干净冒烟 selfcheck 版本行=1.0.0/bench 0/探针 0）；产物-源码同基线：`git diff 2a9658e(M5重写后)..HEAD -- src/` 为空（容器层修复随 1.0.0 重建入产物）
+- Release URL：（发布后补记）
+
+## 8. 发布后复核（阶段 8 收尾）
 
 （待补）
 
