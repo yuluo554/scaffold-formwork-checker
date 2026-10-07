@@ -32,8 +32,8 @@ classifiers = [
 dependencies = []
 
 [project.optional-dependencies]
-# dev 必须覆盖测试期真实 import（口径：防"悄悄少跑"）——synth 冻结测试 import docx，M3 解析测试 import pypdf
-dev = ["pytest>=7", "python-docx>=0.8.11", "pypdf>=3"]
+# dev 必须覆盖测试期真实 import（口径：防"悄悄少跑"）——synth 冻结测试 import docx，M3 解析测试 import pypdf；pyyaml=workflow 守门解析
+dev = ["pytest>=7", "python-docx>=0.8.11", "pypdf>=3", "pyyaml>=6"]
 parse = ["python-docx>=0.8.11", "pypdf>=3"]
 report = ["python-docx>=0.8.11"]
 # PySide6 py3.8 实测锁定 6.6.3.1（6.7+ 元数据 requires-python>=3.9）：上限 <6.7 防干净环境解析到破坏版本

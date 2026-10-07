@@ -16,6 +16,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 脱敏历史扫描（tests/test_desensitize_audit.py）需全量历史
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}

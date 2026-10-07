@@ -14,7 +14,7 @@
 
 ## 当前状态
 
-M5 桌面交付完成（PySide6 五页签 GUI + `sfc gui`；PyInstaller onedir 双 exe，数据内嵌冻结分支 + spec 白名单 + 构建后禁区扫描/内嵌数据对账断言；中立目录+剥离 PATH 干净验证全过；304 tests 全绿）。功能模块按里程碑推进，见下表；详细计划在 [plan/00-README总览.md](plan/00-README总览.md)。
+M5 桌面交付完成（PySide6 五页签 GUI + `sfc gui`；PyInstaller onedir 双 exe，数据内嵌冻结分支 + spec 白名单 + 构建后禁区扫描/内嵌数据对账断言；中立目录+剥离 PATH 干净验证全过；314 tests 全绿）。功能模块按里程碑推进，见下表；详细计划在 [plan/00-README总览.md](plan/00-README总览.md)。
 
 | 里程碑 | 内容 | 状态 |
 |---|---|---|
@@ -75,6 +75,10 @@ CLI 基准与报告导出（M4）：
 # 纪律：无时间戳（签署栏手填）、零外链；同输入位级一致（tests/test_report_*.py 锁定）
 # 退出码：0=报告已生成且无违规/待确认；1=报告已生成但内容含违规或待确认项；2=输入不可用
 ```
+
+> **参数卡从哪来**：`data/examples/` 各例是"真值库记录"（含 `example_id/expect` 包装），
+> 把其中 `input_card` 字段存成 JSON 即为可喂给 `sfc calc` 的参数卡，例如：
+> `python -c "import json;json.dump(json.load(open('data/examples/EX-diji-001.json',encoding='utf-8'))['input_card'],open('card.json','w',encoding='utf-8'),ensure_ascii=False)"`
 
 > 文本路线说明：解析只读文档文本（零识图、零 LLM）。扫描件/图片表格不可读，
 > 对应参数进"待人工确认"而非猜测；真实 PDF 版式兼容性属已知限制。

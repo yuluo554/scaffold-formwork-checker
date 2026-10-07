@@ -1,0 +1,19 @@
+{
+ "data/synthetic/SY-brace-missing-01.docx": "4e47b8e3a13cf53a577a60d4163e39f344d51f1a50644c47bcfbef7803c25893",
+ "data/synthetic/SY-brace-missing-02.docx": "bf4b71755db476f2ce841b09134bb904949792bdd96a218dc41322000d544c1e",
+ "data/synthetic/SY-clean-01.docx": "f880ac4ce5d61ff148c9b6e354f7112eca275e529db72f347864ba2280357167",
+ "data/synthetic/SY-clean-02.docx": "e64904d7467104757fdbf4c7ec52d336449647b7b3b86834fe220b7fe29145e1",
+ "data/synthetic/SY-grading-missing-01.docx": "71b567172f82e3a332a981a9282495e4f1fac705e9ec527bbd93c75870be2d3f",
+ "data/synthetic/SY-grading-missing-02.docx": "2ae894e2ff41e63660ac78cffc4b97a52d3c14d03b4929ff85bf6be07a47c5cc",
+ "data/synthetic/SY-step-over-01.docx": "075f499eb41ff8a838fedc9d45ea68aa2c6f5cfcaf1a0848585922ba477ac7da",
+ "data/synthetic/SY-step-over-02.docx": "f7cbd73a4d4296d94bb0a30a0bab819b6fd710f4d651005e5835855e890d5d85",
+ "data/synthetic/SY-two-sheets-01.docx": "78885ddea4d29e669865a78286d1bb0a87448c1fabf34011349f558e0521650d",
+ "data/synthetic/SY-two-sheets-02.docx": "4a9a8860d826bc30956c837cf0a53b8c008c3fc9d1999442bf5d28bf4d3beeba",
+ "data/synthetic/SY-walltie-over-01.docx": "9b284d7304abad8daab1dd385f5e623c05418ba2343fb0b289e14f4ddbed0aab",
+ "data/synthetic/SY-walltie-over-02.docx": "3ed774f13a1ac1de614931ec31f1bbd9118f7c7c8d5e1faa89519ce978a0277e",
+ "docs/images/gui-tab-01-calc.png": "32c04db98a920ea130ecb218e288b48258d213cca665bcd526aa2f34af7167b5",
+ "docs/images/gui-tab-02-check.png": "20927296b5a1ce6fc6fb4d0ab540b39127e3afe6ad2a02c9542d82c969cd2942",
+ "docs/images/gui-tab-03-consistency.png": "cdfe7e1871179264c84f2d0dad093bec2587f3a7b2fa11aaf3a0362437584cfd",
+ "docs/images/gui-tab-04-grading.png": "d6e16dd7fbdff8dbef0effeaa5b34ae6e41f4503d1b95c1b737c45c96f4fcb2a",
+ "docs/images/gui-tab-05-bench.png": "0f5aae597b6bbec51b4e4eeb1e2325bb48eed2f81a18825915680c071d74bd14"
+}
