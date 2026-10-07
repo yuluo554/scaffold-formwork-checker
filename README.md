@@ -1,6 +1,6 @@
 # scaffold-formwork-checker
 
-🚧 **开发中（M2 公式引擎完成）** · 脚手架与模板支架安全验算及危大分级工具
+🚧 **开发中（M3 方案核查与分级完成）** · 脚手架与模板支架安全验算及危大分级工具
 
 [![CI](https://github.com/yuluo554/scaffold-formwork-checker/actions/workflows/ci.yml/badge.svg)](https://github.com/yuluo554/scaffold-formwork-checker/actions/workflows/ci.yml)
 
@@ -13,13 +13,13 @@
 
 ## 当前状态
 
-M2 公式引擎完成（`engine/` 5+1 验算模块 + 查表矩阵 + 条款库加载器待核对硬拦截 + `sfc calc`）。功能模块按里程碑推进，见下表；详细计划在 [plan/00-README总览.md](plan/00-README总览.md)。
+M3 方案核查与分级完成（`parse/` 方案解析 + `rules/` 构造限值核查 + `consistency/` 两张皮检测 + `grading/` 危大分级判定器 + `sfc check`/`sfc grade`；合成基准检出率 100%/误报 0）。功能模块按里程碑推进，见下表；详细计划在 [plan/00-README总览.md](plan/00-README总览.md)。
 
 | 里程碑 | 内容 | 状态 |
 |---|---|---|
 | M1 | 数据先行：条款库（原文核对纪律）+ 危大阈值清单 + 算例真值库 + 合成方案生成器 | ✅ 2026-10-07 |
 | M2 | 公式引擎：5+1 验算模块，算例回归通过率 100% | ✅ 2026-10-07 |
-| M3 | 方案解析 + 构造限值核查 + 两张皮一致性检测 + 危大分级判定器 | ⬜ |
+| M3 | 方案解析 + 构造限值核查 + 两张皮一致性检测 + 危大分级判定器 | ✅ 2026-10-07 |
 | M4 | 内置基准 `sfc bench`（零 API 依赖）+ docx 报告导出 | ⬜ |
 | M5 | PySide6 桌面应用 + PyInstaller 双 exe | ⬜ |
 | M6 | 脱敏发布 GitHub + Release（exe + 演示） | ⬜ |
@@ -47,6 +47,22 @@ CLI 验算（参数卡 JSON，见 [data/examples/](data/examples/) 内各例 `in
 # 输出：checks（item/expr/substituted/ratio/limit/verdict/clause_refs）+ detail（中间量）
 # 退出码：0=完成；1=降级完成（依据未核对被拦截）；2=输入不可用/参数错误
 ```
+
+CLI 方案核查与危大分级（M3，专项施工方案 docx/PDF 文本路线）：
+
+```bash
+.venv/Scripts/sfc check 专项施工方案.docx          # 解析→构造限值核查+两张皮+分级联动
+# 输出：scheme_card/calcbook_card + findings（违规清单）+ confirmations（待人工确认）+ grading
+# 退出码：0=无违规无待确认；1=存在违规或待人工确认项；2=输入不可用/解析失败
+
+.venv/Scripts/sfc grade 专项施工方案.docx          # 仅危大分级判定
+.venv/Scripts/sfc grade 专项施工方案.pdf --param build_height=56
+# 输出：分级结论（非危大/危大/超过一定规模）+ 义务提示 + 依据摘录（31号文附件原文）
+# 退出码：0=判定完成；1=参数缺失/类型未识别（待人工确认）；2=输入不可用
+```
+
+> 文本路线说明：解析只读文档文本（零识图、零 LLM）。扫描件/图片表格不可读，
+> 对应参数进"待人工确认"而非猜测；真实 PDF 版式兼容性属已知限制。
 
 Linux / macOS：
 
@@ -83,7 +99,18 @@ graph LR
 | 参数扫描回归 | 10 组 | 单调性/边界全锁 | H/活载/步距/横距/风压等关键参数单调性 + λ=250 表档→公式边界 |
 | 条文纪律 | — | 拦截 100% | 任一依赖条目待核对 → 模块整体拒绝计算（双层拦截，测试锁死） |
 
-合成方案基准（检出率/误报率/F1）与危大分级准确率在 M3/M4 接入后填入本表。全部零 API、离线、确定性可复现。
+**合成方案核查基准（M3 dev 版，pytest 守门 `tests/test_m3_synthetic_eval.py`）**：
+
+| 指标 | 数值 | 说明 |
+|---|---|---|
+| 检出率（recall） | **100%**（14/14 期望违规全命中） | 12 冻结 fixtures（5 类注入×2+干净对照×2），按"全部非 pass 集合"对账 |
+| 误报 | **0**（含干净对照 0 误报） | 输出多出的非 pass 项计 0 |
+| F1 / 精确率 | **1.0** | 数值字段（actual/limit_value）与条款号严格对账 |
+| 逐类注入检出率 | 5 类各 **100%** | step_over / walltie_over / brace_missing / two_sheets / grading_missing |
+
+**危大分级判定基准（M3）**：边界值用例 **100%**（落地架 23.9/24.0/24.1、49.9/50.0/50.1，悬挑 20m、附着 150m、承重 7kN、模板支撑 5 条件全边界 ±ε）。
+
+全部零 API、离线、确定性可复现；M4 起 `sfc bench` 一条命令复跑本表。
 
 ## 目录
 

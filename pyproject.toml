@@ -32,8 +32,8 @@ classifiers = [
 dependencies = []
 
 [project.optional-dependencies]
-# dev 必须覆盖测试期真实 import（口径：防"悄悄少跑"）——synth 冻结测试 import docx
-dev = ["pytest>=7", "python-docx>=0.8.11"]
+# dev 必须覆盖测试期真实 import（口径：防"悄悄少跑"）——synth 冻结测试 import docx，M3 解析测试 import pypdf
+dev = ["pytest>=7", "python-docx>=0.8.11", "pypdf>=3"]
 parse = ["python-docx>=0.8.11", "pypdf>=3"]
 report = ["python-docx>=0.8.11"]
 # PySide6 对 py3.8 上限 6.6.3.x：extras 只写下限不锁死小版本，M5 打包前实测锁定（见 plan/06 #7）

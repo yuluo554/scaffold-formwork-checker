@@ -158,8 +158,9 @@ def _truth(scheme, spec):
                      "clause_ref": "JGJ130-6.1.1",
                      "note": "2.4m 同时超出表6.1.1-1 全部步距档（最大 2.0m 仅满堂支撑架侧）"})
     elif inj == "walltie_over":
+        # 限值=3h（表6.4.2 双排落地 H≤50m 档），h 取该池实际步距（原误写 3*1.8 于 M3 修正）
         main.append({"rule_id": "R-walltie-vspacing", "check_type": "threshold",
-                     "param": "wall_tie_v", "op": "<=", "limit_value": 3 * 1.8,
+                     "param": "wall_tie_v", "op": "<=", "limit_value": 3 * scheme["step"],
                      "actual": scheme["wall_tie_v"], "verdict": "violation",
                      "clause_ref": "JGJ130-6.4.2"})
         area = round(scheme["wall_tie_v"] * scheme["wall_tie_h"], 2)

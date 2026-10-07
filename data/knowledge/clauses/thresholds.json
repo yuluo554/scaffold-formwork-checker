@@ -314,6 +314,28 @@
       "verify": "la/[H] 全矩阵在 M3 规则核查时按需从原文表图转录引用"
     },
     {
+      "threshold_id": "T-JGJ130-step-max",
+      "param": "step_max",
+      "op": "<=",
+      "value": 1.8,
+      "unit": "m",
+      "condition": "落地式单双排扣件钢管脚手架常用步距上限（表6.1.1-1/-2 常用设计尺寸步距档 h=1.50/1.80 的最大档）；M3 规则核查消费",
+      "clause_ref": "JGJ130-6.1.1",
+      "status": "已核对",
+      "verify": null
+    },
+    {
+      "threshold_id": "T-JGJ130-step-max-loose",
+      "param": "step_max_loose",
+      "op": "<=",
+      "value": 2.0,
+      "unit": "m",
+      "condition": "扣件式钢管脚手架步距全域上限档（表A.0.1 gk 查表域最大步距档 2.0m；该档仅满堂支撑架侧采用，落地双排常用档见 T-JGJ130-step-max）；M3 规则核查消费",
+      "clause_ref": "JGJ130-A.0.1",
+      "status": "已核对",
+      "verify": null
+    },
+    {
       "threshold_id": "T-JGJ130-pipe-spec",
       "param": "pipe_spec",
       "op": "=",

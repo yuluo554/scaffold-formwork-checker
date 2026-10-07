@@ -8,7 +8,6 @@
 子命令随里程碑扩展：calc（M2 验算）、check/grade（M3 核查与分级）、
 report（M4 导出）、bench（M4 基准）。
 """
-
 import argparse
 import json
 import os
@@ -53,6 +52,22 @@ def build_parser() -> argparse.ArgumentParser:
     )
     p_calc.add_argument("--data-dir", default=None, help="数据目录（含 knowledge/clauses）")
     p_calc.add_argument("--indent", type=int, default=2, help="输出 JSON 缩进（0=单行）")
+    p_check = sub.add_parser(
+        "check", help="核查：专项方案 docx/pdf → 违规清单 + 分级结论 + 待人工确认项"
+    )
+    p_check.add_argument("file", help="专项施工方案文件（.docx/.pdf）")
+    p_check.add_argument("--data-dir", default=None, help="数据目录（含 knowledge/clauses）")
+    p_check.add_argument("--indent", type=int, default=2, help="输出 JSON 缩进（0=单行）")
+    p_grade = sub.add_parser(
+        "grade", help="分级：专项方案 docx/pdf → 危大/超规模判定（结论+义务+依据摘录）"
+    )
+    p_grade.add_argument("file", help="专项施工方案文件（.docx/.pdf）")
+    p_grade.add_argument(
+        "--param", action="append", default=[], metavar="NAME=VALUE",
+        help="判定参数覆盖（可多次，如 --param build_height=56；布尔用 true/false）",
+    )
+    p_grade.add_argument("--data-dir", default=None, help="数据目录（含 knowledge/clauses）")
+    p_grade.add_argument("--indent", type=int, default=2, help="输出 JSON 缩进（0=单行）")
     return parser
 
 
@@ -142,6 +157,105 @@ def _run_calc(args) -> int:
     return EXIT_OK
 
 
+def _parse_param_override(raw):
+    """--param NAME=VALUE：数值→float，true/false→bool，其余保持字符串。"""
+    name, sep, value = raw.partition("=")
+    if not sep or not name.strip():
+        raise ValueError("--param 须为 NAME=VALUE 形式，得到 %r" % (raw,))
+    v = value.strip()
+    if v.lower() == "true":
+        return name.strip(), True
+    if v.lower() == "false":
+        return name.strip(), False
+    try:
+        return name.strip(), float(v)
+    except ValueError:
+        return name.strip(), v
+
+
+def _run_check(args) -> int:
+    """sfc check：方案文档 → 违规清单 + 分级结论 + 待人工确认项。
+
+    退出码：0=核查完成且无违规/待确认项；1=降级完成（存在违规项或待人工
+    确认项，结果仍可用）；2=输入不可用（文件缺失/坏、解析失败、条款库或
+    规则表不可用）。
+    """
+    from .parse import ParseError, parse_scheme
+    from .rules import ChecksError, load_checks_table, run_checks
+    from .engine.loader import KnowledgeError, load_knowledge
+
+    if not os.path.isfile(args.file):
+        print("方案文件不存在：%s" % args.file, file=sys.stderr)
+        return EXIT_INPUT_ERROR
+    try:
+        parsed = parse_scheme(args.file)
+    except ParseError as exc:
+        print("方案解析失败：%s" % exc, file=sys.stderr)
+        return EXIT_INPUT_ERROR
+    try:
+        knowledge = load_knowledge(args.data_dir)
+        checks_table = load_checks_table()
+    except (KnowledgeError, ChecksError) as exc:
+        print("条款库/规则表不可用：%s" % exc, file=sys.stderr)
+        return EXIT_INPUT_ERROR
+    report = run_checks(parsed.scheme_card, parsed.calcbook_card, knowledge,
+                        checks_table)
+    report = dict(report)
+    report["tool"] = "sfc check"
+    report["file"] = args.file
+    report["warnings"] = list(parsed.warnings)
+    indent = None if args.indent == 0 else args.indent
+    print(json.dumps(report, ensure_ascii=False, indent=indent))
+    summary = report["summary"]
+    if summary["violation"] > 0 or summary["confirmations"] > 0:
+        print("注意：发现 %d 项违规、%d 项待人工确认（详见输出 findings/confirmations）"
+              % (summary["violation"], summary["confirmations"]), file=sys.stderr)
+        return EXIT_DEGRADED
+    return EXIT_OK
+
+
+def _run_grade(args) -> int:
+    """sfc grade：方案文档 → 危大/超规模分级判定。
+
+    退出码：0=判定完成（含"非危大"结论）；1=降级完成（参数缺失/类型未识别，
+    待人工确认）；2=输入不可用（文件缺失/坏、解析失败、条款库不可用、
+    --param 形式错误）。
+    """
+    from .parse import ParseError, parse_scheme
+    from .engine.loader import KnowledgeError, load_knowledge
+    from . import grading
+
+    if not os.path.isfile(args.file):
+        print("方案文件不存在：%s" % args.file, file=sys.stderr)
+        return EXIT_INPUT_ERROR
+    overrides = {}
+    try:
+        for raw in args.param:
+            name, value = _parse_param_override(raw)
+            overrides[name] = value
+    except ValueError as exc:
+        print("参数错误：%s" % exc, file=sys.stderr)
+        return EXIT_INPUT_ERROR
+    try:
+        parsed = parse_scheme(args.file)
+    except ParseError as exc:
+        print("方案解析失败：%s" % exc, file=sys.stderr)
+        return EXIT_INPUT_ERROR
+    try:
+        panorama = grading.load_panorama(args.data_dir)
+    except KnowledgeError as exc:
+        print("条款库不可用：%s" % exc, file=sys.stderr)
+        return EXIT_INPUT_ERROR
+    result = grading.judge_card(parsed.scheme_card, panorama=panorama,
+                                param_overrides=overrides)
+    indent = None if args.indent == 0 else args.indent
+    print(json.dumps(result, ensure_ascii=False, indent=indent))
+    if result.get("status") == "pending":
+        print("注意：分级判定待人工确认（%s）" % result.get("note"), file=sys.stderr)
+        return EXIT_DEGRADED
+    return EXIT_OK
+
+
 def main(argv=None) -> int:
     _force_utf8_stdio()
     parser = build_parser()
@@ -151,6 +265,10 @@ def main(argv=None) -> int:
         return _run_selfcheck()
     if args.command == "calc":
         return _run_calc(args)
+    if args.command == "check":
+        return _run_check(args)
+    if args.command == "grade":
+        return _run_grade(args)
     parser.print_help()
     return EXIT_INPUT_ERROR
 

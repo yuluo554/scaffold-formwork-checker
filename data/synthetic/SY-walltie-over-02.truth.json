@@ -8,7 +8,7 @@
       "actual": 6.0,
       "check_type": "threshold",
       "clause_ref": "JGJ130-6.4.2",
-      "limit_value": 5.4,
+      "limit_value": 4.5,
       "op": "<=",
       "param": "wall_tie_v",
       "rule_id": "R-walltie-vspacing",
