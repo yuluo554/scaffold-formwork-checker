@@ -89,6 +89,10 @@ def build_parser() -> argparse.ArgumentParser:
     r_check.add_argument("-o", "--output", required=True, help="输出 docx 路径")
     r_check.add_argument("--title", default=None, help="封面标题（缺省=专项施工方案核查报告）")
     r_check.add_argument("--data-dir", default=None, help="数据目录（含 knowledge/clauses）")
+    p_gui = sub.add_parser(
+        "gui", help="桌面 GUI（PySide6 五页签：验算/方案核查/一致性/危大分级/基准）"
+    )
+    p_gui.add_argument("--data-dir", default=None, help="数据目录（含 knowledge/clauses）")
     return parser
 
 
@@ -114,17 +118,11 @@ def _optional_deps_status() -> "list[str]":
 
 
 def _find_data_dir() -> "str | None":
-    """从 CWD 上溯找 data/（信息性探测；打包内嵌查找分支按 plan/03 D8 于 M5 冻结实现）。"""
-    base = os.getcwd()
-    for _ in range(4):
-        candidate = os.path.join(base, "data")
-        if os.path.isdir(candidate):
-            return candidate
-        parent = os.path.dirname(base)
-        if parent == base:
-            break
-        base = parent
-    return None
+    """数据目录信息性探测：与引擎 loader.find_data_dir 同一查找链
+    （显式/环境变量/打包内嵌冻结分支/CWD 上溯，M5 起统一口径）。"""
+    from .engine.loader import find_data_dir
+
+    return find_data_dir(None)
 
 
 def _run_selfcheck() -> int:
@@ -393,6 +391,18 @@ def _report_check(args) -> int:
     return EXIT_OK
 
 
+def _run_gui(args) -> int:
+    """sfc gui：启动桌面 GUI（PySide6 惰性导入；缺依赖提示安装，exit 2）。"""
+    try:
+        from .gui.app import main as gui_main
+    except ImportError as exc:
+        print("GUI 依赖未安装：%s" % exc, file=sys.stderr)
+        print("请安装 GUI 依赖组：pip install -e \".[gui]\"", file=sys.stderr)
+        return EXIT_INPUT_ERROR
+    argv = ["--data-dir", args.data_dir] if args.data_dir else []
+    return gui_main(argv)
+
+
 def main(argv=None) -> int:
     _force_utf8_stdio()
     parser = build_parser()
@@ -410,6 +420,8 @@ def main(argv=None) -> int:
         return _run_bench(args)
     if args.command == "report":
         return _run_report(args)
+    if args.command == "gui":
+        return _run_gui(args)
     parser.print_help()
     return EXIT_INPUT_ERROR
 

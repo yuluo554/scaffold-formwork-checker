@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "scaffold-formwork-checker"
-version = "0.1.0"
+version = "0.5.0"
 description = "脚手架与模板支架安全验算及危大分级工具（规范公式验算 + 专项方案文本核查 + 危大/超规模分级判定，CLI/桌面双通路，全离线）"
 readme = "README.md"
 requires-python = ">=3.8"
@@ -36,12 +36,16 @@ dependencies = []
 dev = ["pytest>=7", "python-docx>=0.8.11", "pypdf>=3"]
 parse = ["python-docx>=0.8.11", "pypdf>=3"]
 report = ["python-docx>=0.8.11"]
-# PySide6 对 py3.8 上限 6.6.3.x：extras 只写下限不锁死小版本，M5 打包前实测锁定（见 plan/06 #7）
-gui = ["PySide6"]
-build = ["pyinstaller>=6"]
+# PySide6 py3.8 实测锁定 6.6.3.1（6.7+ 元数据 requires-python>=3.9）：上限 <6.7 防干净环境解析到破坏版本
+gui = ["PySide6>=6.6,<6.7"]
+# PyInstaller 6.x 在 py3.8 上 modulegraph 扫 dis 指令崩（低频随机），实测锁定 5.13.x 稳妥通道
+build = ["pyinstaller>=5.13,<6"]
 
 [project.scripts]
 sfc = "scaffold_formwork_checker.cli:main"
+
+[project.gui-scripts]
+sfc-gui = "scaffold_formwork_checker.gui.app:main"
 
 [project.urls]
 # GitHub 仓库地址于 M6 发布时补充（plan/06 #3）

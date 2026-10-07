@@ -9,6 +9,7 @@
 
 import json
 import os
+import sys
 
 # 模块依赖面（与 tests/test_clause_library.py::test_engine_module_dependencies_all_verified 同一口径；
 # 新增依赖须两处同步，否则测试打挂）
@@ -65,12 +66,34 @@ class KnowledgeError(Exception):
     """条款库不可用（缺文件/结构坏）。按输入不可用处置（CLI exit 2）。"""
 
 
+def _frozen_data_candidates():
+    """打包（PyInstaller）环境的数据目录候选，按优先级排列（M5 冻结口径）。
+
+    1. sys._MEIPASS/data：PyInstaller onedir 运行期解包根（5.x=exe 目录、
+       6.x=_internal），spec datas 把 data/ 落在此处；
+    2. <exe 目录>/_internal/data：PyInstaller 6.x 布局下 _MEIPASS 缺失时的兜底；
+    3. <exe 目录>/data：PyInstaller 5.x 布局兜底。
+
+    冻结分支整体排在 CWD 上溯**之前**——exe 内嵌数据优先于工作目录发现，
+    防止"在仓库树内跑 exe 却命中仓库 data，内嵌数据验了个寂寞"。
+    """
+    cands = []
+    meipass = getattr(sys, "_MEIPASS", None)
+    if meipass:
+        cands.append(os.path.join(meipass, "data"))
+    if getattr(sys, "frozen", False):
+        exe_dir = os.path.dirname(os.path.abspath(sys.executable))
+        cands.append(os.path.join(exe_dir, "_internal", "data"))
+        cands.append(os.path.join(exe_dir, "data"))
+    return cands
+
+
 def find_data_dir(explicit=None):
-    """数据目录查找：显式参数 > SFC_DATA 环境变量 > CWD 上溯 > 包相对上溯（开发树）。
+    """数据目录查找（M5 冻结优先级）：显式参数 > SFC_DATA 环境变量 >
+    打包内嵌（_MEIPASS / exe 目录）> CWD 上溯 > 包相对上溯（开发树）。
 
     显式参数（--data-dir / 环境变量）不合法时立即返回 None（不静默回退到自动发现，
     防止"指错目录却跑出别处数据"）；仅自动发现路径走逐级回退。
-    打包内嵌分支（sys._MEIPASS 等）按 plan/03 D8 于 M5 冻结实现，此处留扩展位。
     """
     if explicit:
         if os.path.isdir(os.path.join(explicit, "knowledge", "clauses")):
@@ -81,7 +104,7 @@ def find_data_dir(explicit=None):
         if os.path.isdir(os.path.join(env, "knowledge", "clauses")):
             return env
         return None
-    candidates = []
+    candidates = list(_frozen_data_candidates())
     base = os.getcwd()
     for _ in range(5):
         candidates.append(os.path.join(base, "data"))

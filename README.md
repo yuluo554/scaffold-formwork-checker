@@ -1,6 +1,6 @@
 # scaffold-formwork-checker
 
-🚧 **开发中（M4 内置基准与报告导出完成）** · 脚手架与模板支架安全验算及危大分级工具
+🚧 **开发中（M5 桌面交付完成，v0.5.0）** · 脚手架与模板支架安全验算及危大分级工具
 
 [![CI](https://github.com/yuluo554/scaffold-formwork-checker/actions/workflows/ci.yml/badge.svg)](https://github.com/yuluo554/scaffold-formwork-checker/actions/workflows/ci.yml)
 
@@ -9,11 +9,12 @@
 - **安全验算**：JGJ 130-2011 / JGJ 162-2008 规范公式验算（立杆稳定性、水平杆抗弯挠度、连墙件、地基承载力、模板支架立杆稳定），结论逐条挂条款号，计算过程透明；
 - **专项方案文本核查**：解析专项施工方案（docx/PDF 文本）为参数卡，对照规范构造限值核查，并检测"方案 vs 验算书"两张皮一致性；
 - **危大分级判定**：住建部令第 37 号 + 建办质〔2018〕31 号阈值清单化，三级判定（非危大 / 危大 / 超过一定规模须专家论证），结论挂文件+条款+原文摘录；
-- **报告导出**：docx 验算书与核查报告（内置免责声明）。
+- **报告导出**：docx 验算书与核查报告（无时间戳、零外链、内置免责声明）；
+- **桌面 GUI 与免安装 exe**：PySide6 五页签（验算/方案核查/一致性/危大分级/基准）只消费引擎 API；PyInstaller 打包双 exe，数据内嵌、完全离线。
 
 ## 当前状态
 
-M4 内置基准与报告导出完成（`bench/` 三套件 + `sfc bench` 一条命令复跑基准；`report/` docx 验算书/核查报告生成器 + `sfc report`，产物无时间戳位级一致、零外链、免责声明强制；255 tests 全绿）。功能模块按里程碑推进，见下表；详细计划在 [plan/00-README总览.md](plan/00-README总览.md)。
+M5 桌面交付完成（PySide6 五页签 GUI + `sfc gui`；PyInstaller onedir 双 exe，数据内嵌冻结分支 + spec 白名单 + 构建后禁区扫描/内嵌数据对账断言；中立目录+剥离 PATH 干净验证全过；304 tests 全绿）。功能模块按里程碑推进，见下表；详细计划在 [plan/00-README总览.md](plan/00-README总览.md)。
 
 | 里程碑 | 内容 | 状态 |
 |---|---|---|
@@ -21,7 +22,7 @@ M4 内置基准与报告导出完成（`bench/` 三套件 + `sfc bench` 一条�
 | M2 | 公式引擎：5+1 验算模块，算例回归通过率 100% | ✅ 2026-10-07 |
 | M3 | 方案解析 + 构造限值核查 + 两张皮一致性检测 + 危大分级判定器 | ✅ 2026-10-07 |
 | M4 | 内置基准 `sfc bench`（零 API 依赖）+ docx 报告导出 `sfc report` | ✅ 2026-10-07 |
-| M5 | PySide6 桌面应用 + PyInstaller 双 exe | ⬜ |
+| M5 | PySide6 五页签 GUI（只消费引擎 API）+ PyInstaller 双 exe（数据内嵌+构建红线断言）+ 技术报告 | ✅ 2026-10-07 |
 | M6 | 脱敏发布 GitHub + Release（exe + 演示） | ⬜ |
 
 ## 快速开始（当前骨架）
@@ -78,6 +79,27 @@ CLI 基准与报告导出（M4）：
 > 文本路线说明：解析只读文档文本（零识图、零 LLM）。扫描件/图片表格不可读，
 > 对应参数进"待人工确认"而非猜测；真实 PDF 版式兼容性属已知限制。
 
+桌面 GUI（PySide6 五页签，同一引擎）：
+
+```bash
+.venv/Scripts/python -m pip install -e ".[gui]"     # PySide6>=6.6,<6.7（py3.8 实测上限 6.6.3.1）
+.venv/Scripts/sfc gui                               # 或 .venv/Scripts/sfc-gui
+# 页签：验算（模块表单+导出验算书）/ 方案核查（违规+待确认+导出报告）/
+#       一致性（两卡差异）/ 危大分级（结论+义务+依据摘录）/ 基准（三套件指标）
+```
+
+免安装 exe（PyInstaller onedir 双入口，数据内嵌、完全离线）：
+
+```bash
+.venv/Scripts/python -m pip install -e ".[build]"   # pyinstaller>=5.13,<6（py3.8 稳妥通道）
+.venv/Scripts/python tools/build_exe.py             # 构建 + 构建后断言（禁区扫描+内嵌数据对账）
+# dist/sfc/sfc.exe     CLI 控制台（selfcheck/calc/check/grade/bench/report 五连可用）
+# dist/sfc/sfc-gui.exe 桌面 GUI（--probe 无头自检）
+# 版权红线：规范原文全文（data/knowledge/raw/）绝不入包；入包数据=包内规则表+条款库+算例库+合成 fixtures 共 46 份
+```
+
+界面截图（五页签真实运行态）：[docs/images/](docs/images/)；技术报告见 [docs/技术报告.md](docs/技术报告.md)。
+
 Linux / macOS：
 
 ```bash
@@ -129,11 +151,12 @@ graph LR
 ## 目录
 
 ```
-src/scaffold_formwork_checker/   核心包（engine/parse/rules/grading/report/bench/gui 按里程碑就位）
-tests/                           pytest（含退出码语义等守门测试）
+src/scaffold_formwork_checker/   核心包（engine/parse/rules/grading/report/bench/gui/packaging）
+tools/                           生成器·打包（sfc.spec+build_exe.py）·截图脚本
+tests/                           pytest（含退出码语义/冻结分支/打包纪律等守门测试）
 data/                            条款库·算例库·合成 fixtures（台账见 data/README.md）
 plan/                            计划文档（00 总览 / 01 题目 / 02-06 详设 / HANDOFF 交接）
-docs/                            技术报告（M5-M6）
+docs/                            技术报告 + 界面截图
 ```
 
 ## 免责声明
