@@ -86,10 +86,26 @@
 - 发布 zip：`sfc-v1.0.0-windows-x64-onedir.zip`（52,146,144 字节）sha256=`28eaa48dacd8d9140cf4c6683d883c72d576f725c4834fb0d81b6c080132fbf2`（1.0.0 重建版：exe 内嵌版本同步 1.0.0，BUILD_CHECKS_OK，干净冒烟 selfcheck 版本行=1.0.0/bench 0/探针 0）；产物-源码同基线：`git diff 2a9658e(M5重写后)..HEAD -- src/` 为空（容器层修复随 1.0.0 重建入产物）
 - Release URL：（发布后补记）
 
-## 8. 发布后复核（阶段 8 收尾）
+## 8. 发布后复核（阶段 8，复核对象=远端最终提交 be82e31 + tag v1.0.0）
 
-（待补）
+- **复核时序**：tag v1.0.0 打在 CI 绿的终态提交 be82e31 上（run 37703601266 四矩阵绿）→ `gh release create`（notes=评测表数值+演示命令+免责声明；exe zip 附件）→ topics 8 个（gh api 回读生效）→ GitHub 全新 clone 复核。
+- **GitHub 全新 clone 复核（git@github.com 直连）**：①脱敏审计全模式 `DESSENSITIZE_AUDIT_OK`（HARD=0）；②`selfcheck` 0 / `bench` 0（三套件达标）；③`pytest` 292 passed + 2 skipped（[dev] 环境，对账 314；GUI 21 项与 dist 项归因同 §1，CI 四矩阵已在同提交全绿复核）；④旧邮箱字面值人工 grep（仓外固定字面值）→ **0**；⑤README 渲染核验（`gh api readme` HTML）：CI 徽章/“v1.0.0 已发布”/评测基准表关键串全命中；⑥仓库元信息：public / main / topics 8 个 / Release v1.0.0 附件 `sfc-v1.0.0-windows-x64-onedir.zip`。
+- **push 数=run 数对账**：3 push（109ff7c/01f8412/be82e31）= 3 push-event runs（其余 0；tag push 未配触发不产生 run，如实记录）。
+- Release URL：https://github.com/yuluo554/scaffold-formwork-checker/releases/tag/v1.0.0
 
-## 8. 收尾固化（DoD ⑦）
+## 9. 收尾固化（DoD ⑦）
 
-（待补）
+- README 状态行转正（✅ v1.0.0 已发布 + Release 链接）+ 里程碑表 M6 勾；plan/00 状态转正 + 文档索引更新；plan/05 M6 收尾状态段；plan/06 #12 关闭（不投真实赛事）+ #32/#33/#34 决策行；HANDOFF-M6 终版收官标注 + M6 DoD 全勾（就地收束，不另写 HANDOFF-M7，决策 #34）。
+- 技术报告 docx 化：跳过（#34；docs/技术报告.md 已入仓，需求触发再启动生成器）。
+- 结果性回写小提交（本节+§7 终值）：tag 后推送、等 CI 复绿、**不迁 tag**（时序③型——需要发布结果才能写的回写天然后置）。
+- 仓外清理：改写前 bundle 备份（sfc-pre-rewrite.bundle）与全部临时 clone/验证目录已删除；dist/（52MB zip + onedir）不入仓（.gitignore 常驻）。
+
+## 10. M6 DoD 终核（全勾）
+
+- [x] ①干净环境验证（§1：README 逐字跑通；终态复验对账 314，skip 逐项归因）
+- [x] ②脱敏四步+产物本体扫描固化入仓（§3：脚本+白名单+守门测试 10 项；系列表述公开性 §2）
+- [x] ③提交元数据邮箱（§4：env-filter 全历史 noreply，终验 0）
+- [x] ④建仓（§5：无 --push → SSH push 一次成）
+- [x] ⑤CI 四矩阵绿（§6：run2 起全绿；push=run 对账成立）
+- [x] ⑥Release/tag 经用户确认打在 CI 绿终态提交（§7/§8：v1.0.0 + exe zip；缓议 #12/#13 清零）
+- [x] ⑦收尾固化（§9：README/plan 回写 + 就地收束 + docx 化显式跳过留档）
