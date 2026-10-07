@@ -61,8 +61,9 @@ _EXEMPT_EXACT = ("example.com", "users.noreply.github.com")
 def _hard_patterns():
     return [
         ("email", re.compile(r"[A-Za-z0-9][A-Za-z0-9._%+\-]*@[A-Za-z0-9\-]+(?:\.[A-Za-z0-9\-]+)+")),
-        ("phone", re.compile(r"(?<!\d)1[3-9]\d{9}(?!\d)")),
-        ("idcard", re.compile(r"(?<!\d)\d{17}[\dXx](?!\d)")),
+        # 手机号/证件号加 hex 边界环视：sha256 十六进制串内的数字段不是电话（白名单/文档 hex 误报校准）
+        ("phone", re.compile(r"(?<![0-9a-fA-F])1[3-9]\d{9}(?![0-9a-fA-F])")),
+        ("idcard", re.compile(r"(?<![0-9a-fA-F])\d{17}[\dXx](?![0-9a-fA-F])")),
         ("userpath-win", re.compile(
             r"(?i)(?<![a-z0-9])[a-z]:\\+" + r"use" + r"rs\\+[^\s\"'<>|,;)\]]+")),
         ("userpath-msys", re.compile(
@@ -334,7 +335,8 @@ def selftest():
                "fine: git@github.com and a@example.com and https://x.io/p and "
                "0000000000000000000000000 and 138000000000 not-phone(12位)\n"
                % (email_f, phone_f, id_f, path_f, sk_f))
-        # 阴性边界：19 位长数字串不吃 phone/ID（词边界）；URL scheme 不吃盘符
+        # 阴性边界：hex 串内 11/18 位数字段不得命中（sha256 白名单实测误报源）；URL scheme 不吃盘符
+        hex_neutral = "a1" + "1" + "38" + "12345678" + "c07" + " " + "b" + id_f + "d"
         (td / "sample.txt").write_text(doc, encoding="utf-8")
         findings = []
         scan_text(doc, "sample.txt", findings, kinds="both")
@@ -343,6 +345,11 @@ def selftest():
         expect(findings, "sample.txt", "HARD", "idcard", True)
         expect(findings, "sample.txt", "HARD", "userpath-win", True)
         expect(findings, "sample.txt", "HARD", "secret-sk", True)
+        # hex 阴性：sha256 形态十六进制串内的数字段（11/18 位）不得命中
+        findings_hex = []
+        scan_text(hex_neutral, "hex.txt", findings_hex, kinds="both")
+        expect(findings_hex, "hex.txt", "HARD", "phone", False)
+        expect(findings_hex, "hex.txt", "HARD", "idcard", False)
         # 豁免域（github.com/example.com）与 12 位长数字串不得命中——doc 里已内嵌，零命中即对
         # docx 全条目扫描：core.xml 元数据含邮箱必须被抓
         docx = td / "fake.docx"

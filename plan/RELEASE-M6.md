@@ -46,7 +46,7 @@
 - **第 3 步 二进制样例**：docx 走 zipfile 全条目扫描（含 docProps/core.xml 的 creator/lastModifiedBy 元数据重灾区）0 命中；png 走字节强标记+tEXt/iTXt 文本块扫描 0 命中；sha256 白名单对账 17/17 一致；synthetic docx 与 data/synthetic/manifest.json 登记值联动对账 12/12 一致。
 - **第 4 步 历史三扫**：①`git log --all -p --format=commit %H` 全文（含提交信息+全部 diff）硬模式 0 命中；②`git rev-list --all --objects` 对象路径 0 敏感形态；③逐提交树面 fixed-string 前向覆盖（姊妹词+个人目录形态）仅姊妹词 REVIEW 命中（公开性豁免，见 §2）。**旧邮箱字面值级历史验证属仓外人工步骤**（字面值不入仓铁律），执行记录见 §4。
 - **产物本体扫描（第 5 步）**：`--mode dist` 全 dist 树字节级强标记（个人目录形态+姊妹词）+ 禁区段（raw）路径扫描 → **0 命中**（M5 打包红线"raw 绝不入包"在产物侧复核成立）。
-- **selftest 阳性/阴性对照**：SELFTEST_OK——阳性（拼接构造的邮箱/11 位手机号/18 位证件/个人目录路径/sk 密钥/docx core.xml 元数据邮箱/字节级目录标记）全被捕获；阴性（github.com/example.com 豁免域、12 位长数字串、25 位长数字串、URL scheme、无标记字节）全不误报。首轮 selftest 实抓夹具 bug（分隔符插进 "Users" 中间致路径阳性未命中），修正后复跑过——阳性对照有效性实证。
+- **selftest 阳性/阴性对照**：SELFTEST_OK——阳性（拼接构造的邮箱/11 位手机号/18 位证件/个人目录路径/sk 密钥/docx core.xml 元数据邮箱/字节级目录标记）全被捕获；阴性（github.com/example.com 豁免域、12 位长数字串、25 位长数字串、URL scheme、hex 串内数字段、无标记字节）全不误报。首轮 selftest 实抓夹具 bug（分隔符插进 "Users" 中间致路径阳性未命中），修正后复跑过——阳性对照有效性实证。**hex 误报校准实录**：binary_whitelist.json 入仓后，其 sha256 十六进制串内的 11 位数字段（…f81a1+8825915680+c07…）被 phone 模式命中（该文件提交前进不了 git 扫描面，提交后随 diff 进入历史扫描才暴露）→ phone/idcard 模式加 hex 边界环视（`(?<![0-9a-fA-F])…(?![0-9a-fA-F])`），selftest 补 hex 阴性对照——真实号码在文本中必以非 hex 字符定界，无漏报代价。
 - **REVIEW 豁免留档**：plan/01 姊妹词 ×1 + 历史 log-p 姊妹词 ×5 + 历史树面姊妹词 ×7 个提交——全部属已公开前作（§2），豁免常驻。
 - **守门测试常驻**：test_desensitize_audit.py 6 项随全量测试运行（dist 项在无产物环境声明式跳过）；审计脚本所在提交先于推送（审查作用域=被推送提交，见 M5 事故纪律）。
 
