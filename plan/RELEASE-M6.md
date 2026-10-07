@@ -26,6 +26,11 @@
 | `sfc report check …SY-two-sheets-01.docx -o …` | 1 | 含违规降级（预期） |
 | `QT_QPA_PLATFORM=offscreen sfc-gui --probe` | 0 | GUI 无头探针通过 |
 
+- **复验（发布前终态历史上重跑，6005a93；含 pyyaml 入 dev extras + 审计守门 10 项后的最终口径）**：dev 基线 **314 passed**；中立目录新 clone + 全新 venv：
+  - [dev]：`pytest -q -rs` → **292 passed, 2 skipped**，skip 逐项指认：①`SKIPPED [1] tests\test_gui.py:22: could not import 'PySide6'`（21 项 GUI 模块级折叠）；②`SKIPPED [1] tests\test_desensitize_audit.py:57: dist/sfc 不存在（未构建产物）`（声明式跳过）；对账 292 + 21 + 1 = **314** ✅；
+  - [dev,gui]：`pytest -q` → **313 passed, 1 skipped**（唯一 skip=dist 缺席），313 + 1 = **314** ✅；
+  - `sfc --version` 0.5.0 / `selfcheck` 0 / `QT_QPA_PLATFORM=offscreen sfc-gui --probe` 0 / `sfc bench` 0 全过；
+  - CLI 五连（calc 提取 input_card/check 双例/grade/bench/report×2）已在 M5 内容上实跑留档（见下表，src/data 树与终态一致，M6 未动引擎与数据）。
 - **验证过程实录（暴露问题与处置）**：
   1. EOL 守门抓现行：验证期误将 bench 输出重定向进 clone 内（`bench_clean.json`），Windows 控制台重定向产生 CRLF → `tests/test_eol_gate.py` 立即 FAIL（`assert not ['bench_clean.json']`）。**守门测试有效性的活证据**；草稿产物一律放仓库树外后复跑全绿。产品无缺陷，不加测试（守门本就在位）。
   2. README 发现①：`sfc calc` 直接喂 `data/examples/*.json` 退出码 2（真值库记录含 `example_id/expect` 包装，非裸参数卡）——dev 环境同命令同退出码，**非回归**，属 README 可跑通性小缺口：README 只说"参数卡形态见各例 input_card 字段"，但仓内无一份可直接喂给 calc 的裸参数卡。处置：README calc 段补一行澄清（用户从 `input_card` 字段提取），随 M6 发布准备提交入仓；不新增数据文件（避免动打包白名单 46 份对账）。
