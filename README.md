@@ -1,6 +1,6 @@
 # scaffold-formwork-checker
 
-🚧 **开发中（M3 方案核查与分级完成）** · 脚手架与模板支架安全验算及危大分级工具
+🚧 **开发中（M4 内置基准与报告导出完成）** · 脚手架与模板支架安全验算及危大分级工具
 
 [![CI](https://github.com/yuluo554/scaffold-formwork-checker/actions/workflows/ci.yml/badge.svg)](https://github.com/yuluo554/scaffold-formwork-checker/actions/workflows/ci.yml)
 
@@ -13,14 +13,14 @@
 
 ## 当前状态
 
-M3 方案核查与分级完成（`parse/` 方案解析 + `rules/` 构造限值核查 + `consistency/` 两张皮检测 + `grading/` 危大分级判定器 + `sfc check`/`sfc grade`；合成基准检出率 100%/误报 0）。功能模块按里程碑推进，见下表；详细计划在 [plan/00-README总览.md](plan/00-README总览.md)。
+M4 内置基准与报告导出完成（`bench/` 三套件 + `sfc bench` 一条命令复跑基准；`report/` docx 验算书/核查报告生成器 + `sfc report`，产物无时间戳位级一致、零外链、免责声明强制；255 tests 全绿）。功能模块按里程碑推进，见下表；详细计划在 [plan/00-README总览.md](plan/00-README总览.md)。
 
 | 里程碑 | 内容 | 状态 |
 |---|---|---|
 | M1 | 数据先行：条款库（原文核对纪律）+ 危大阈值清单 + 算例真值库 + 合成方案生成器 | ✅ 2026-10-07 |
 | M2 | 公式引擎：5+1 验算模块，算例回归通过率 100% | ✅ 2026-10-07 |
 | M3 | 方案解析 + 构造限值核查 + 两张皮一致性检测 + 危大分级判定器 | ✅ 2026-10-07 |
-| M4 | 内置基准 `sfc bench`（零 API 依赖）+ docx 报告导出 | ⬜ |
+| M4 | 内置基准 `sfc bench`（零 API 依赖）+ docx 报告导出 `sfc report` | ✅ 2026-10-07 |
 | M5 | PySide6 桌面应用 + PyInstaller 双 exe | ⬜ |
 | M6 | 脱敏发布 GitHub + Release（exe + 演示） | ⬜ |
 
@@ -61,6 +61,20 @@ CLI 方案核查与危大分级（M3，专项施工方案 docx/PDF 文本路线�
 # 退出码：0=判定完成；1=参数缺失/类型未识别（待人工确认）；2=输入不可用
 ```
 
+CLI 基准与报告导出（M4）：
+
+```bash
+.venv/Scripts/sfc bench                            # examples/synthetic/grading 三套件一条命令
+# 输出：三套件指标 + targets 达标判定（README 基准表同源）
+# 退出码：0=全部指标达标；1=有指标未达标（完整指标仍输出）；2=数据目录不可用
+
+.venv/Scripts/sfc report calc 参数卡.json -o 验算书.docx      # 验算书 docx
+.venv/Scripts/sfc report check 专项施工方案.docx -o 核查报告.docx
+# 产物：封面/参数卡表/逐项验算（或逐项核查）/违规清单/分级结论/待人工确认项/免责声明（强制）
+# 纪律：无时间戳（签署栏手填）、零外链；同输入位级一致（tests/test_report_*.py 锁定）
+# 退出码：0=报告已生成且无违规/待确认；1=报告已生成但内容含违规或待确认项；2=输入不可用
+```
+
 > 文本路线说明：解析只读文档文本（零识图、零 LLM）。扫描件/图片表格不可读，
 > 对应参数进"待人工确认"而非猜测；真实 PDF 版式兼容性属已知限制。
 
@@ -89,9 +103,9 @@ graph LR
 
 设计原则：数值结论永远来自确定性规则（零 LLM 通路）；未经原文核对（status）的条文数值不进入计算路径；CLI/GUI 消费同一引擎 API。详见 [plan/03-架构与技术选型.md](plan/03-架构与技术选型.md)。
 
-## 评测基准（初版，M4 起 `sfc bench` 一条命令复跑）
+## 评测基准（M4 正式版，`sfc bench` 一条命令复跑本表）
 
-**算例真值回归**（容差内，pytest 守门 `tests/test_engine_regression.py`）：
+**算例真值回归**（bench examples 套件；pytest 守门 `tests/test_engine_regression.py`、`tests/test_bench_suites.py`）：
 
 | 套件 | 用例数 | 通过率 | 说明 |
 |---|---|---|---|
@@ -99,7 +113,7 @@ graph LR
 | 参数扫描回归 | 10 组 | 单调性/边界全锁 | H/活载/步距/横距/风压等关键参数单调性 + λ=250 表档→公式边界 |
 | 条文纪律 | — | 拦截 100% | 任一依赖条目待核对 → 模块整体拒绝计算（双层拦截，测试锁死） |
 
-**合成方案核查基准（M3 dev 版，pytest 守门 `tests/test_m3_synthetic_eval.py`）**：
+**合成方案核查基准**（bench synthetic 套件；pytest 守门 `tests/test_m3_synthetic_eval.py`）：
 
 | 指标 | 数值 | 说明 |
 |---|---|---|
@@ -108,9 +122,9 @@ graph LR
 | F1 / 精确率 | **1.0** | 数值字段（actual/limit_value）与条款号严格对账 |
 | 逐类注入检出率 | 5 类各 **100%** | step_over / walltie_over / brace_missing / two_sheets / grading_missing |
 
-**危大分级判定基准（M3）**：边界值用例 **100%**（落地架 23.9/24.0/24.1、49.9/50.0/50.1，悬挑 20m、附着 150m、承重 7kN、模板支撑 5 条件全边界 ±ε）。
+**危大分级判定基准**（bench grading 套件，35 用例；pytest 守门 `tests/test_grading.py`、`tests/test_bench_suites.py`）：通过率 **100%**（35/35——落地架 23.9/24.0/24.1、49.9/50.0/50.1 双档全边界，悬挑 20m、附着 150m、承重 7kN ±ε，模板支撑危大 5 条件+超规模 4 条件全边界，参数缺失 pending 2 例）。
 
-全部零 API、离线、确定性可复现；M4 起 `sfc bench` 一条命令复跑本表。
+全部零 API、离线、确定性可复现；`sfc bench` 一条命令复跑本表并按达标门限（examples 通过率 100%、synthetic F1≥0.95 且误报 0、grading 通过率 100%）给出退出码。
 
 ## 目录
 

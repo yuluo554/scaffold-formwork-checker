@@ -60,7 +60,7 @@
 | `SY-grading-missing-0{1,2}.*` | 2×2 | grading 注入：H=56m 应专家论证未标注（37号令§12），also_expect 含分级判定=超过一定规模 |
 | `manifest.json` | 1 | seed=20261006 + 逐 fixture sha256 |
 
-生成器：`src/scaffold_formwork_checker/synth/`（SplitMix64 确定性 RNG，禁 stdlib random/set 序/时钟）；落盘 docx zip 全条目 date_time=(1980,1,1,0,0,0)、core/app.xml 固定内容（无时间戳）；两次运行位级一致（`tools/gen_synthetic.py --check` + `tests/test_synth_freeze.py` 守门）。**禁止手改**；改体例→`py -X utf8 tools/gen_synthetic.py` 重新生成整目录提交，并同步本表 sha256。
+生成器：`src/scaffold_formwork_checker/synth/`（SplitMix64 确定性 RNG，禁 stdlib random/set 序/时钟）；落盘 docx zip 全条目 date_time=(1980,1,1,0,0,0)、core/app.xml 固定内容（无时间戳）；两次运行位级一致（`tools/gen_synthetic.py --check` + `tests/test_synth_freeze.py` 守门）。**禁止手改**；改体例→`py -X utf8 tools/gen_synthetic.py` 重新生成整目录提交，并同步本表 sha256。M4 起本目录为 `sfc bench` synthetic 套件数据源（`bench/run_synthetic_suite` 按 manifest 逐 fixture 对账，改体例会直接打挂基准指标）。
 
 **M3 变更（2026-10-07，决策 #23）**：`SY-walltie-over-02.truth.json` 的 `limit_value` 由生成器误写的 3×1.8=5.4 修正为 3×该池步距 1.5=4.5（表6.4.2 竖向限值=3h，h 取该例实际步距）；`_truth` 硬编码改随池步距后重生成整目录，docx 字节不变（sha256 无变化），仅该 truth 文件更新。M3 基准评测按"全部非 pass 集合"对账且含数值字段严格比对（`tests/test_m3_synthetic_eval.py`）。
 

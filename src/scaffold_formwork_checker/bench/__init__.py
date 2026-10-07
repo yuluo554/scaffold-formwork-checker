@@ -1,14 +1,20 @@
 # -*- coding: utf-8 -*-
-"""M3 合成基准（dev 版）：冻结 fixtures 跑"解析+核查"，按"全部非 pass 集合"对账。
+"""内置基准（M4 正式化）：三套件一条命令跑完（sfc bench）。
 
-真值语义（M1 决策 #20）：main_expect + also_expect 构成期望的非 pass 集合。
-评测器把管线输出中 verdict != "pass" 的 findings 与期望集合对账：
+- examples 套件：算例真值库逐例过引擎，容差对账（examples_suite.py）；
+- synthetic 套件：冻结 fixtures 跑"解析+核查"，按"全部非 pass 集合"对账
+  （本模块，M3 dev 版评测器直接转正）；
+- grading 套件：分级判定边界值用例表（grading_suite.py）。
+
+达标门限 BENCH_TARGETS（README 基准表同源）：examples 通过率 100%、
+synthetic F1≥0.95 且误报 0、grading 通过率 100%。全套零 API、离线、确定性。
+
+synthetic 真值语义（M1 决策 #20）：main_expect + also_expect 构成期望的
+非 pass 集合。评测器把管线输出中 verdict != "pass" 的 findings 与期望集合对账：
 
 - 期望命中（rule_id 相同 + verdict 一致 + 数值字段容差内 + clause_ref 被包含）→ TP；
 - 期望未命中 → FN（漏报：防"漏报伪装成正确"）；
 - 输出多出的非 pass 项 → FP（误报）。
-
-M4 的 sfc bench synthetic 套件复用本模块。全套零 API、离线、确定性。
 """
 
 import json
@@ -17,8 +23,18 @@ import os
 from ..engine.loader import load_knowledge
 from ..parse import parse_scheme
 from ..rules import load_checks_table, run_checks
+from .examples_suite import evaluate_example, load_examples, run_examples_suite
+from .grading_suite import GRADING_CASES, run_grading_suite
 
 _NUM_TOL = 1e-6
+
+# 达标门限（sfc bench 退出码 0/1 的判定依据；指标同源写入 README 基准表）
+BENCH_TARGETS = {
+    "examples_pass_rate": 1.0,      # 算例真值回归通过率（13 例全对账）
+    "synthetic_f1_min": 0.95,       # 合成基准 F1（M3 dev 版目标沿用）
+    "synthetic_fp_max": 0,          # 合成基准误报数（干净对照 0 误报）
+    "grading_pass_rate": 1.0,       # 分级边界值用例通过率
+}
 
 
 def _match(expected, finding):
@@ -77,7 +93,7 @@ def evaluate_fixture(docx_path, truth_path, knowledge=None, checks_table=None):
 
 
 def run_synthetic_suite(synthetic_dir=None, data_dir=None):
-    """整套合成基准：读 manifest 逐 fixture 评测，汇总检出率/误报/F1。"""
+    """synthetic 套件：读 manifest 逐 fixture 评测，汇总检出率/误报/F1。"""
     if synthetic_dir is None:
         base = load_knowledge(data_dir).data_dir
         synthetic_dir = os.path.join(base, "synthetic")
@@ -132,4 +148,48 @@ def run_synthetic_suite(synthetic_dir=None, data_dir=None):
     }
 
 
-__all__ = ["evaluate_fixture", "run_synthetic_suite"]
+def _targets_met(examples, synthetic, grading):
+    """逐门限求值：返回 {门限名: bool}（README 基准表同源口径）。"""
+    m = synthetic["metrics"]
+    return {
+        "examples_pass_rate": examples["pass_rate"] >= BENCH_TARGETS["examples_pass_rate"],
+        "synthetic_f1": m["f1"] >= BENCH_TARGETS["synthetic_f1_min"],
+        "synthetic_false_positives": (m["false_positive_count"]
+                                      <= BENCH_TARGETS["synthetic_fp_max"]),
+        "grading_pass_rate": grading["pass_rate"] >= BENCH_TARGETS["grading_pass_rate"],
+    }
+
+
+def run_all(data_dir=None):
+    """三套件一条命令跑完：examples + synthetic + grading → 汇总与达标判定。"""
+    examples = run_examples_suite(data_dir)
+    synthetic = run_synthetic_suite(None, data_dir)
+    grading = run_grading_suite(data_dir)
+    targets = _targets_met(examples, synthetic, grading)
+    return {
+        "suites": {
+            "examples": {
+                "examples": examples["examples"],
+                "passed": examples["passed"],
+                "pass_rate": examples["pass_rate"],
+                "fail_examples": examples["fail_examples"],
+            },
+            "synthetic": {"metrics": synthetic["metrics"],
+                          "by_injection": synthetic["by_injection"]},
+            "grading": {
+                "cases": grading["cases"],
+                "passed": grading["passed"],
+                "pass_rate": grading["pass_rate"],
+                "fail_cases": grading["fail_cases"],
+            },
+        },
+        "targets": targets,
+        "all_pass": all(targets.values()),
+    }
+
+
+__all__ = [
+    "BENCH_TARGETS", "GRADING_CASES", "evaluate_example", "evaluate_fixture",
+    "load_examples", "run_all", "run_examples_suite", "run_grading_suite",
+    "run_synthetic_suite",
+]

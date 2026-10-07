@@ -6,7 +6,7 @@
   2 = 输入不可用 / 参数错误
 
 子命令随里程碑扩展：calc（M2 验算）、check/grade（M3 核查与分级）、
-report（M4 导出）、bench（M4 基准）。
+bench/report（M4 基准与导出）。
 """
 import argparse
 import json
@@ -68,6 +68,27 @@ def build_parser() -> argparse.ArgumentParser:
     )
     p_grade.add_argument("--data-dir", default=None, help="数据目录（含 knowledge/clauses）")
     p_grade.add_argument("--indent", type=int, default=2, help="输出 JSON 缩进（0=单行）")
+    p_bench = sub.add_parser(
+        "bench", help="内置基准：examples/synthetic/grading 三套件一条命令跑完（零 API 离线）"
+    )
+    p_bench.add_argument("--data-dir", default=None, help="数据目录（含 knowledge/clauses）")
+    p_bench.add_argument("--indent", type=int, default=2, help="输出 JSON 缩进（0=单行）")
+    p_report = sub.add_parser(
+        "report", help="报告导出：docx 验算书 / 核查报告（无时间戳、零外链、内置免责声明）"
+    )
+    r_sub = p_report.add_subparsers(dest="report_kind", metavar="<kind>")
+    r_calc = r_sub.add_parser("calc", help="验算书：参数卡 JSON → docx")
+    r_calc.add_argument("card", help="参数卡 JSON 文件路径")
+    r_calc.add_argument("-o", "--output", required=True, help="输出 docx 路径")
+    r_calc.add_argument("--module", default=None,
+                        help="验算模块 M-1~M-6（缺省按参数卡内容自动识别）")
+    r_calc.add_argument("--title", default=None, help="封面标题（缺省=安全验算书）")
+    r_calc.add_argument("--data-dir", default=None, help="数据目录（含 knowledge/clauses）")
+    r_check = r_sub.add_parser("check", help="核查报告：专项方案 docx/pdf → docx")
+    r_check.add_argument("file", help="专项施工方案文件（.docx/.pdf）")
+    r_check.add_argument("-o", "--output", required=True, help="输出 docx 路径")
+    r_check.add_argument("--title", default=None, help="封面标题（缺省=专项施工方案核查报告）")
+    r_check.add_argument("--data-dir", default=None, help="数据目录（含 knowledge/clauses）")
     return parser
 
 
@@ -256,6 +277,122 @@ def _run_grade(args) -> int:
     return EXIT_OK
 
 
+def _run_bench(args) -> int:
+    """sfc bench：三套件（examples/synthetic/grading）一条命令跑完。
+
+    退出码：0=全部指标达标；1=降级完成（有指标未达标，完整指标仍输出）；
+    2=输入不可用（数据目录/条款库缺失或坏）。
+    """
+    from . import bench
+    from .engine.loader import KnowledgeError
+
+    try:
+        outcome = bench.run_all(args.data_dir)
+    except KnowledgeError as exc:
+        print("数据目录不可用：%s" % exc, file=sys.stderr)
+        return EXIT_INPUT_ERROR
+    indent = None if args.indent == 0 else args.indent
+    print(json.dumps(outcome, ensure_ascii=False, indent=indent))
+    if not outcome["all_pass"]:
+        failed = [name for name, ok in outcome["targets"].items() if not ok]
+        print("注意：基准指标未达标：%s（详见输出 targets/suites）" % ", ".join(failed),
+              file=sys.stderr)
+        return EXIT_DEGRADED
+    return EXIT_OK
+
+
+def _run_report(args) -> int:
+    """sfc report：按 kind 分派到验算书/核查报告生成器。"""
+    if getattr(args, "report_kind", None) == "calc":
+        return _report_calc(args)
+    if getattr(args, "report_kind", None) == "check":
+        return _report_check(args)
+    print("用法：sfc report calc|check ……（--help 查看参数）", file=sys.stderr)
+    return EXIT_INPUT_ERROR
+
+
+def _report_calc(args) -> int:
+    """sfc report calc：参数卡 → docx 验算书。
+
+    退出码与 sfc calc 同口径：0=完成；1=降级完成（依赖未核对被拦截，
+    验算书仅载说明）；2=输入不可用/参数错误。
+    """
+    from .engine import CardError, KnowledgeError, detect_module, load_knowledge, run_calc
+    from .report import generate_calc_report
+
+    if not os.path.isfile(args.card):
+        print("参数卡文件不存在：%s" % args.card, file=sys.stderr)
+        return EXIT_INPUT_ERROR
+    try:
+        with open(args.card, encoding="utf-8") as f:
+            card_data = json.load(f)
+    except ValueError as exc:
+        print("参数卡 JSON 解析失败：%s" % exc, file=sys.stderr)
+        return EXIT_INPUT_ERROR
+    try:
+        knowledge = load_knowledge(args.data_dir)
+    except KnowledgeError as exc:
+        print("条款库不可用：%s" % exc, file=sys.stderr)
+        return EXIT_INPUT_ERROR
+    try:
+        module_id = args.module or detect_module(card_data if isinstance(card_data, dict) else {})
+        result = run_calc(module_id, card_data, knowledge)
+    except (CardError, KnowledgeError) as exc:
+        print("参数错误：%s" % exc, file=sys.stderr)
+        return EXIT_INPUT_ERROR
+    generate_calc_report(card_data, result, args.output, title=args.title)
+    print(json.dumps({"output": args.output, "module_id": result["module_id"],
+                      "status": result["status"]}, ensure_ascii=False))
+    if result.get("status") == "blocked":
+        print("注意：%s（验算书仅载说明）" % result.get("status_note", ""), file=sys.stderr)
+        return EXIT_DEGRADED
+    return EXIT_OK
+
+
+def _report_check(args) -> int:
+    """sfc report check：方案文档 → docx 核查报告。
+
+    退出码与 sfc check 同口径：0=核查完成且无违规/待确认项；1=降级完成
+    （报告已生成，内容含违规或待人工确认项）；2=输入不可用。
+    """
+    from .parse import ParseError, parse_scheme
+    from .rules import ChecksError, load_checks_table, run_checks
+    from .engine.loader import KnowledgeError, load_knowledge
+    from .report import generate_check_report
+
+    if not os.path.isfile(args.file):
+        print("方案文件不存在：%s" % args.file, file=sys.stderr)
+        return EXIT_INPUT_ERROR
+    try:
+        parsed = parse_scheme(args.file)
+    except ParseError as exc:
+        print("方案解析失败：%s" % exc, file=sys.stderr)
+        return EXIT_INPUT_ERROR
+    try:
+        knowledge = load_knowledge(args.data_dir)
+        checks_table = load_checks_table()
+    except (KnowledgeError, ChecksError) as exc:
+        print("条款库/规则表不可用：%s" % exc, file=sys.stderr)
+        return EXIT_INPUT_ERROR
+    report = run_checks(parsed.scheme_card, parsed.calcbook_card, knowledge,
+                        checks_table)
+    report = dict(report)
+    report["tool"] = "sfc report check"
+    report["file"] = args.file
+    report["warnings"] = list(parsed.warnings)
+    generate_check_report(report, args.output, knowledge=knowledge, title=args.title)
+    summary = report["summary"]
+    print(json.dumps({"output": args.output,
+                      "violation": summary["violation"],
+                      "confirmations": summary["confirmations"]},
+                     ensure_ascii=False))
+    if summary["violation"] > 0 or summary["confirmations"] > 0:
+        print("注意：报告含 %d 项违规、%d 项待人工确认"
+              % (summary["violation"], summary["confirmations"]), file=sys.stderr)
+        return EXIT_DEGRADED
+    return EXIT_OK
+
+
 def main(argv=None) -> int:
     _force_utf8_stdio()
     parser = build_parser()
@@ -269,6 +406,10 @@ def main(argv=None) -> int:
         return _run_check(args)
     if args.command == "grade":
         return _run_grade(args)
+    if args.command == "bench":
+        return _run_bench(args)
+    if args.command == "report":
+        return _run_report(args)
     parser.print_help()
     return EXIT_INPUT_ERROR
 
