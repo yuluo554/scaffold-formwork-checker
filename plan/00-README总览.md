@@ -2,7 +2,7 @@
 
 **项目**：脚手架与模板支架安全验算及危大分级工具（土木工程·施工安全领域，Windows 桌面程序，零识图路线）
 **方法论**：ai-tool-project-sprint；与前作同模式（公式引擎+文本核查+分级判定+算例真值基准）
-**当前状态**：✅ **v2.0.0 已发布**（M1-M6 收官 + v2.0.0 二次迭代：Python floor 3.8→3.10、依赖线重评、条款库复核机制、发布物由 Python 3.12 重建；318 tests 全绿，CI 四矩阵 ubuntu/windows × 3.10/3.12；v1.0.0 发布门留档 [RELEASE-M6.md](RELEASE-M6.md)，v2.0.0 执行记录见 update/02-执行记录.md）
+**当前状态**：✅ **v2.0.0 已发布**（M1-M6 收官 + v2.0.0 二次迭代：Python floor 3.8→3.10、依赖线重评、条款库复核机制、发布物由 Python 3.12 重建；318 tests 全绿，CI 四矩阵 ubuntu/windows × 3.10/3.12；v1.0.0 发布门留档 [RELEASE-M6.md](RELEASE-M6.md)，v2.0.0 已发布：tag/Release [v2.0.0](https://github.com/yuluo554/scaffold-formwork-checker/releases/tag/v2.0.0)，执行记录见 update/02-执行记录.md；CI 四矩阵 ubuntu/windows × 3.10/3.12 在 e6ba924 全绿（run 39243179597））
 
 ## 文档索引
 

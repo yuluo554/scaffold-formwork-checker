@@ -26,7 +26,7 @@ py -m venv .venv
 .venv/Scripts/python -m pip install -U pip
 .venv/Scripts/python -m pip install -e ".[dev]"
 .venv/Scripts/sfc selfcheck                        # 自检：版本/extras/数据目录
-.venv/Scripts/python -m pytest tests -q            # 318 tests
+.venv/Scripts/python -m pytest tests -q            # 319 tests
 ```
 
 免安装 exe（不想装 Python 时用）：到 [Release](https://github.com/yuluo554/scaffold-formwork-checker/releases/latest)
