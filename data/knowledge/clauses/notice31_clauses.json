@@ -1,5 +1,17 @@
 {
   "meta": {
+    "review": {
+      "reviewed_on": "2026-10-19",
+      "cycle_months": 12,
+      "next_review_due": "2027-10-19",
+      "reviewer": "执行方（v2.0.0 迭代，权威渠道直连核实）",
+      "standards": [
+        {"standard": "建办质〔2018〕31号", "issued": "2018-05-17", "effective": "2018-05-17",
+         "currency": "现行（未检索到废止公告；后续有 48号指南/63号缺陷清单等配套文件，非替代）",
+         "authority_url": "https://www.mohurd.gov.cn/gongkai/zc/wjk/art/2018/art_17339_236168.html ; https://www.mohurd.gov.cn/gongkai/zc/wjk/art/2021/art_17339_763509.html ; https://www.mohurd.gov.cn/gongkai/zc/wjk/art/2024/art_d0bab8f6afbd4bb2868b83fc0440f461.html",
+         "conclusion": "现行通知；附件1/附件2 危大与超规模范围清单仍为分级判定依据。配套文件：建办质〔2021〕48号（专项施工方案编制指南）、建办质〔2024〕63号（方案严重缺陷清单·试行），均为补充细化，未废止本通知。"}
+      ]
+    },
     "standard": "建办质〔2018〕31号",
     "full_name": "住房城乡建设部办公厅关于实施《危险性较大的分部分项工程安全管理规定》有关问题的通知",
     "issue": "发文日期 2018-05-17（索引号 000013338/2018-00134），2018-05-22 发布",

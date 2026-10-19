@@ -4,10 +4,10 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "scaffold-formwork-checker"
-version = "1.0.0"
+version = "2.0.0"
 description = "脚手架与模板支架安全验算及危大分级工具（规范公式验算 + 专项方案文本核查 + 危大/超规模分级判定，CLI/桌面双通路，全离线）"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [{ name = "yuluo554" }]
 keywords = [
@@ -24,7 +24,8 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: Microsoft :: Windows",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Topic :: Scientific/Engineering",
 ]
@@ -33,13 +34,14 @@ dependencies = []
 
 [project.optional-dependencies]
 # dev 必须覆盖测试期真实 import（口径：防"悄悄少跑"）——synth 冻结测试 import docx，M3 解析测试 import pypdf；pyyaml=workflow 守门解析
-dev = ["pytest>=7", "python-docx>=0.8.11", "pypdf>=3", "pyyaml>=6"]
-parse = ["python-docx>=0.8.11", "pypdf>=3"]
-report = ["python-docx>=0.8.11"]
-# PySide6 py3.8 实测锁定 6.6.3.1（6.7+ 元数据 requires-python>=3.9）：上限 <6.7 防干净环境解析到破坏版本
-gui = ["PySide6>=6.6,<6.7"]
-# PyInstaller 6.x 在 py3.8 上 modulegraph 扫 dis 指令崩（低频随机），实测锁定 5.13.x 稳妥通道
-build = ["pyinstaller>=5.13,<6"]
+# 下限=2.0.0 实测验证过的线（pytest 9.1.1 / python-docx 1.2.0 / pypdf 6.21.1 下全绿）
+dev = ["pytest>=8", "python-docx>=1.1", "pypdf>=5", "pyyaml>=6"]
+parse = ["python-docx>=1.1", "pypdf>=5"]
+report = ["python-docx>=1.1"]
+# floor 抬到 3.10 后 PySide6 6.7+ 可解析；上限 <7 防跨大版本破坏（6.12.0 实测）
+gui = ["PySide6>=6.6,<7"]
+# floor 抬到 3.10 后 PyInstaller 6.x 可用（6.22.3 实测重建 exe）；上限 <7 防跨大版本
+build = ["pyinstaller>=6,<7"]
 
 [project.scripts]
 sfc = "scaffold_formwork_checker.cli:main"

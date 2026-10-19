@@ -1,5 +1,17 @@
 {
   "meta": {
+    "review": {
+      "reviewed_on": "2026-10-19",
+      "cycle_months": 12,
+      "next_review_due": "2027-10-19",
+      "reviewer": "执行方（v2.0.0 迭代，权威渠道直连核实）",
+      "standards": [
+        {"standard": "住房和城乡建设部令第37号", "issued": "2018-03-08", "effective": "2018-06-01",
+         "currency": "现行（2019-03-13 部令第47号修正后版本）",
+         "authority_url": "https://www.mohurd.gov.cn/gongkai/zhengce/gzk/art/2022/art_17337_763794.html ; https://www.gov.cn/gongbao/content/2018/content_5294422.htm",
+         "conclusion": "现行部门规章；第十一条（审批）、第十二条（专家论证≥5名）、第十六条（不得擅自修改方案）逐字核对一致。"}
+      ]
+    },
     "standard": "住房和城乡建设部令第37号",
     "full_name": "危险性较大的分部分项工程安全管理规定",
     "issue": "2018年2月12日第37次部常务会议审议通过，2018年3月8日发布，2018年6月1日起施行；根据2019年3月13日住房和城乡建设部令第47号《住房和城乡建设部关于修改部分部门规章的决定》修正",

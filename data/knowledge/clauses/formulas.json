@@ -1,5 +1,21 @@
 {
   "meta": {
+    "review": {
+      "reviewed_on": "2026-10-19",
+      "cycle_months": 12,
+      "next_review_due": "2027-10-19",
+      "reviewer": "执行方（v2.0.0 迭代，权威渠道直连核实）",
+      "standards": [
+        {"standard": "JGJ 130-2011", "issued": "2011-01-28", "effective": "2011-12-01",
+         "currency": "现行（16 条强制性条文已被 GB 55023-2022 废止，本表公式所用条文不在其中）",
+         "authority_url": "https://www.mohurd.gov.cn/gongkai/zc/wjk/art/2022/art_17339_765631.html",
+         "conclusion": "本表公式条文（5.2.4/5.2.6/5.2.7/5.2.9/5.3.4/5.5.1/5.5.4/附录A）未被 GB 55023-2022 废止清单点名。"},
+        {"standard": "JGJ 162-2008", "issued": "2008-08-06", "effective": "2008-12-01",
+         "currency": "现行",
+         "authority_url": "https://www.mohurd.gov.cn/gongkai/zc/wjk/art/2008/art_17339_176559.html",
+         "conclusion": "本表 JGJ162 公式（4.1.1/4.3.1/5.2.5/5.2.6）条文现行。"}
+      ]
+    },
     "purpose": "公式表：机器可读的验算公式骨架。expr 用变量符号式表示；系数、参数取值以 thresholds.json 与条款库为准。M2 引擎按 formula_id 装配。",
     "discipline": "status=待核对 的公式不得进入计算路径。公式本体均从原文公式图视觉转录（文件见 source）。"
   },
@@ -271,8 +287,10 @@
       "applies_to": "（预留）模板侧面面板/对拉螺栓验算，首期 5 模块不使用",
       "clause_refs": ["JGJ162-4.1.1"],
       "status": "待核对",
-      "source": {"file": "JGJ162-2008_pmgd.cn_品茗规范库.html（条款文本已核；公式本体图未逐字转录）", "fetched": "2026-10-06"},
-      "note": "首期 M-6（支架立杆稳定）不依赖此式；进入模板面板验算范围前必须完成公式图逐字核对。"
+      "source": {"file": "JGJ162-2008_pmgd.cn_品茗规范库.html（条款文本已核）；公式本体图 JGJ162-2008_pmgd_imgs/1-240P1094FY16.jpg（2026-10-19 目读复核一致）", "fetched": "2026-10-06"},
+      "not_used_by": ["M-1", "M-2", "M-3", "M-4", "M-5", "M-6"],
+      "pending_reason": "本版本计算路径全模块不引用（not_used_by 列出）；公式本体已按原文公式图目读一致（F=0.22γc·t0·β1·β2·V^½ 与 F=γc·H 取小），未完成项=参数表补全（t0/β1/β2/V/H 的取值来源登记）与逐字转录留档。",
+      "note": "进入模板面板/对拉螺栓验算范围前必须完成 pending_reason 所列未完成项，届时才可转 已核对。"
     }
   ]
 }

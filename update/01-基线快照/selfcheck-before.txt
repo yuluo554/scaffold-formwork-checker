@@ -1,0 +1,7 @@
+sfc selfcheck
+  版本    : 1.0.0
+  解释器  : Python 3.8.8 (win32)
+  extras parse : docx:可用, pypdf:可用
+  extras report: docx:可用
+  extras gui   : PySide6:可用
+  数据目录: D:\ProgramData\zcode\10-6-scaffold-formwork-checker\data

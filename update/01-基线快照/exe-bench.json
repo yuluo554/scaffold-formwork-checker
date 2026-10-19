@@ -1,0 +1,83 @@
+{
+  "suites": {
+    "examples": {
+      "examples": 13,
+      "passed": 13,
+      "pass_rate": 1.0,
+      "fail_examples": []
+    },
+    "synthetic": {
+      "metrics": {
+        "expected_non_pass": 14,
+        "tp": 14,
+        "fn": 0,
+        "fp": 0,
+        "detection_rate": 1.0,
+        "false_positive_count": 0,
+        "false_positive_rate": 0.0,
+        "clean_baseline_count": 2,
+        "clean_baseline_fp": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "by_injection": {
+        "clean": {
+          "tp": 0,
+          "fn": 0,
+          "fp": 0,
+          "fixtures": 2,
+          "detection_rate": 1.0
+        },
+        "step_over": {
+          "tp": 4,
+          "fn": 0,
+          "fp": 0,
+          "fixtures": 2,
+          "detection_rate": 1.0
+        },
+        "walltie_over": {
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "fixtures": 2,
+          "detection_rate": 1.0
+        },
+        "brace_missing": {
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "fixtures": 2,
+          "detection_rate": 1.0
+        },
+        "two_sheets": {
+          "tp": 2,
+          "fn": 0,
+          "fp": 0,
+          "fixtures": 2,
+          "detection_rate": 1.0
+        },
+        "grading_missing": {
+          "tp": 4,
+          "fn": 0,
+          "fp": 0,
+          "fixtures": 2,
+          "detection_rate": 1.0
+        }
+      }
+    },
+    "grading": {
+      "cases": 35,
+      "passed": 35,
+      "pass_rate": 1.0,
+      "fail_cases": []
+    }
+  },
+  "targets": {
+    "examples_pass_rate": true,
+    "synthetic_f1": true,
+    "synthetic_false_positives": true,
+    "grading_pass_rate": true
+  },
+  "all_pass": true
+}

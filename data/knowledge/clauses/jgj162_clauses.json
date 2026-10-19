@@ -1,5 +1,17 @@
 {
   "meta": {
+    "review": {
+      "reviewed_on": "2026-10-19",
+      "cycle_months": 12,
+      "next_review_due": "2027-10-19",
+      "reviewer": "执行方（v2.0.0 迭代，权威渠道直连核实）",
+      "standards": [
+        {"standard": "JGJ 162-2008", "issued": "2008-08-06", "effective": "2008-12-01",
+         "currency": "现行（未检索到替代/废止公告）",
+         "authority_url": "https://www.mohurd.gov.cn/gongkai/zc/wjk/art/2008/art_17339_176559.html",
+         "conclusion": "住建部公告第79号发布，现行；GB 55008-2021 与 GB 55023-2022 的“废止强制性条文”附件清单中均无 JGJ 162-2008，故其条文（含 3 条强制性条文 5.1.6/6.1.9/6.2.4）未被这两部通用规范点名废止。"}
+      ]
+    },
     "standard": "JGJ 162-2008",
     "full_name": "建筑施工模板安全技术规范",
     "issue": "2008-08-06 发布，2008-12-01 实施，现行",

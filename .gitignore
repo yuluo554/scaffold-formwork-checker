@@ -30,3 +30,6 @@ data/knowledge/raw/
 Thumbs.db
 Desktop.ini
 .DS_Store
+
+# v2.0.0 迭代：发布 zip 属 Release 资产，不入仓
+update/01-基线快照/*.zip

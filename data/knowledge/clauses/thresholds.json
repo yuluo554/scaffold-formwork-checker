@@ -1,5 +1,21 @@
 {
   "meta": {
+    "review": {
+      "reviewed_on": "2026-10-19",
+      "cycle_months": 12,
+      "next_review_due": "2027-10-19",
+      "reviewer": "执行方（v2.0.0 迭代，权威渠道直连核实）",
+      "standards": [
+        {"standard": "JGJ 130-2011", "issued": "2011-01-28", "effective": "2011-12-01",
+         "currency": "现行（16 条强制性条文已被 GB 55023-2022 废止，本表所用取值条文不在其中）",
+         "authority_url": "https://www.mohurd.gov.cn/gongkai/zc/wjk/art/2022/art_17339_765631.html",
+         "conclusion": "本表 JGJ130 取值（表4.2.2/表5.1.6/表5.1.7/表6.1.1/表6.4.2/表A.0.1/表A.0.6/表B.0.1）未被废止清单点名；6.4.2 连墙件限值、6.6.2 剪刀撑要求与 GB 55023-2022 4.4.6/4.4.7 一致。"},
+        {"standard": "JGJ 162-2008", "issued": "2008-08-06", "effective": "2008-12-01",
+         "currency": "现行",
+         "authority_url": "https://www.mohurd.gov.cn/gongkai/zc/wjk/art/2008/art_17339_176559.html",
+         "conclusion": "本表 JGJ162 取值（表4.1.1/4.1.2/表4.2.3/4.3.2/5.2.5/表5.2.6/表A.1.1-1）条文现行。"}
+      ]
+    },
     "purpose": "阈值/取值表：M2 引擎数值源 + M3 核查规则 limit_ref 指向。分表管理：本文件=JGJ 130/162 构造与计算取值；危大分级阈值见 panorama.json。",
     "discipline": "status=待核对 的数值不得进入计算路径。表值均转录自原文文本或原文表格图（raw/）。查表类条目（phi/gk/mu）同时登记引擎取值方式。",
     "lookup_tables_note": "phi_table/gk_table/mu_table 的完整数值矩阵存放于 engine M2 的查表模块（从原文表图转录），此处登记关键锚点值供测试对账。"

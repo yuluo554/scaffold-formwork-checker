@@ -1,5 +1,17 @@
 {
   "meta": {
+    "review": {
+      "reviewed_on": "2026-10-19",
+      "cycle_months": 12,
+      "next_review_due": "2027-10-19",
+      "reviewer": "执行方（v2.0.0 迭代，权威渠道直连核实）",
+      "standards": [
+        {"standard": "JGJ 130-2011", "issued": "2011-01-28", "effective": "2011-12-01",
+         "currency": "现行（本体未废止；16 条强制性条文自 2022-10-01 起由 GB 55023-2022 废止）",
+         "authority_url": "https://www.mohurd.gov.cn/gongkai/zc/wjk/art/2011/art_17339_208026.html ; https://www.mohurd.gov.cn/gongkai/zc/wjk/art/2022/art_17339_765631.html",
+         "conclusion": "仍为现行行业标准，本库引用的计算条文（5.1/5.2/6.1/6.4.2/6.6.2/附录A、B）不在废止清单内；6.2.3/6.4.4/6.6.3 三条的强制性条文地位已被 GB 55023-2022 取代，其构造要求现由 GB 55023-2022 4.4.6/4.4.7 承接，本工具未把这三条用于数值计算路径（仅作品条索引）。"}
+      ]
+    },
     "standard": "JGJ 130-2011",
     "full_name": "建筑施工扣件式钢管脚手架安全技术规范",
     "issue": "住房和城乡建设部2011年1月28日第902号公告批准发布，2011-12-01 实施",
