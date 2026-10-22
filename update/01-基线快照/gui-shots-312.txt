@@ -1,6 +1,0 @@
-截图：docs\images\gui-tab-01-calc.png (73175 bytes)
-截图：docs\images\gui-tab-02-check.png (132085 bytes)
-截图：docs\images\gui-tab-03-consistency.png (58218 bytes)
-截图：docs\images\gui-tab-04-grading.png (67517 bytes)
-截图：docs\images\gui-tab-05-bench.png (43293 bytes)
-GUI_SHOTS_OK

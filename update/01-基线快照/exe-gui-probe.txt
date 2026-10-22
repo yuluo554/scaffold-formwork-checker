@@ -1,1 +1,0 @@
-GUI_PROBE_OK tabs=5 data_dir=D:\ProgramData\zcode\10-6-scaffold-formwork-checker\dist\sfc\_internal\data
