@@ -69,6 +69,59 @@ def test_pending_formula_not_in_engine_path():
             assert src not in pending, (x["formula_id"], pid, src)
 
 
+CLAUSE_FILES = ("jgj130_clauses.json", "jgj162_clauses.json",
+                "decree37_clauses.json", "notice31_clauses.json")
+
+
+def test_verified_clause_never_cites_pending_formula():
+    """已核对条款的 formula_refs 必须全部指向已核对公式（SI-020）。
+
+    缺口（2026-10-23 实测）：`JGJ162-4.1.1` 自身 `status=已核对`，但
+    `formula_refs` 指向 `status=待核对` 的 `F-J162-sidepressure`。全仓原有测试
+    只校验「待核对公式不得被**模块**引用」（上一函数），没人校验「**条款**引用的公式
+    本身是否核对过」——于是一条已核对条款在机读层面"引用"了未经核对的数值来源。
+
+    处置口径：不伪造核对结论（不把侧压力公式转 已核对）。未核对的引用移入
+    `pending_formula_refs`，与 `formula_refs`（已验证面）分离；计算路径读前者之外
+    的字段，故不改变任何数值结论。
+    """
+    formulas = {x["formula_id"]: x["status"] for x in _load("formulas.json")["formulas"]}
+    offenders = []
+    for fname in CLAUSE_FILES:
+        for c in _load(fname)["clauses"]:
+            for fid in c.get("formula_refs") or []:
+                assert fid in formulas, ("条款引用了不存在的公式", fname, c["clause_id"], fid)
+                if formulas[fid] != "已核对":
+                    offenders.append((fname, c["clause_id"], fid, formulas[fid]))
+    assert not offenders, (
+        "已核对条款不得在 formula_refs 里引用未核对公式"
+        "（应移入 pending_formula_refs）：%r" % (offenders,)
+    )
+
+
+def test_pending_formula_refs_still_traceable():
+    """被移出 formula_refs 的待核对引用必须留在 pending_formula_refs 里（不许直接删）。
+
+    这是上一条的反向守门：允许「未核对的引用」存在，但必须**显式标记**为待核对，
+    否则修 SI-020 的最省事写法（把 refs 清空）会把可追溯性一起删掉。
+    """
+    formulas = {x["formula_id"]: x["status"] for x in _load("formulas.json")["formulas"]}
+    traced = {}
+    for fname in CLAUSE_FILES:
+        for c in _load(fname)["clauses"]:
+            for fid in c.get("pending_formula_refs") or []:
+                assert fid in formulas, ("pending 引用了不存在的公式", fname, c["clause_id"], fid)
+                assert formulas[fid] != "已核对", (
+                    "公式 %s 已转 已核对，应移回 formula_refs 而不是留在 pending_formula_refs"
+                    % fid)
+                traced.setdefault(fid, []).append(c["clause_id"])
+    # 当前唯一待核对公式必须仍被至少一条条款登记
+    pending_all = {fid for fid, st in formulas.items() if st != "已核对"}
+    for fid in pending_all:
+        assert fid in traced, "待核对公式 %s 没有任何条款登记（追溯断链）" % fid
+
+
+
 def test_panorama_items_have_excerpts_and_levels():
     pano = _load("panorama.json")
     assert len(pano["items"]) >= 8
