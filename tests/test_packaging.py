@@ -221,3 +221,23 @@ def test_scan_dist_pyinstaller5_layout_passes(tmp_path):
     (app / "scaffold_formwork_checker/rules/checks.json").write_text("{}", encoding="utf-8")
     assert scan_dist(str(dist), str(root)) == []
     shutil.rmtree(tmp_path / "dist", ignore_errors=True)
+
+
+# ---- 真实 dist 的内嵌数据对账（v2.0.1 新增守门）----
+
+def test_real_dist_embedded_data_matches_repo():
+    """仓库里存在 dist/sfc 时，其内嵌数据必须与当前仓库逐份一致。
+
+    背景（v2.0.0 的真实事故）：那次迭代的时序是「先重建 exe → 后改 data/ → 一起提交」，
+    提交后没有再重建 dist。`tools/build_exe.py --check` 在构建当时是真绿（两边都旧），
+    而发布前的冒烟只跑 version/selfcheck/bench/gui-probe，**零项读条款库的 meta.review**
+    —— 于是 7 个条款库带着 v1.0.0 的内容进了 v2.0.0 的附件。
+
+    本测试把那次漏检变成「跑 pytest 就会红」：只要 dist 在，drift 就无法静默通过。
+    无 dist 时 skip（CI 不构建产物，与 test_desensitize_audit 的口径一致）。
+    """
+    dist = _REPO / "dist"
+    if not (dist / "sfc").is_dir():
+        pytest.skip("dist/sfc 不存在（未构建产物）")
+    errors = scan_dist(str(dist), str(_REPO))
+    assert errors == [], "dist 内嵌数据与仓库不一致（先重建再发版）：\n  - " + "\n  - ".join(errors)

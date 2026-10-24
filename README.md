@@ -26,12 +26,16 @@ py -m venv .venv
 .venv/Scripts/python -m pip install -U pip
 .venv/Scripts/python -m pip install -e ".[dev]"
 .venv/Scripts/sfc selfcheck                        # 自检：版本/extras/数据目录
-.venv/Scripts/python -m pytest tests -q            # 319 tests
+.venv/Scripts/python -m pytest tests -q            # 329 tests
 ```
 
 免安装 exe（不想装 Python 时用）：到 [Release](https://github.com/yuluo554/scaffold-formwork-checker/releases/latest)
-下载 `sfc-v2.0.0-windows-x64-onedir.zip`，解压后直接运行 `sfc\sfc.exe`（CLI）或
+下载 `sfc-v2.0.1-windows-x64-onedir.zip`，解压后直接运行 `sfc\sfc.exe`（CLI）或
 `sfc\sfc-gui.exe`（GUI）；数据内嵌，无需任何依赖。
+
+> **v2.0.0 的 exe 附件请勿使用**：其内嵌的 7 个条款库 JSON 是 v1.0.0 的旧副本，
+> v2.0.0 宣称新增的复核元数据（`meta.review`）在附件里并不存在（数值结论本身无误）。
+> 详见 [CHANGELOG.md](CHANGELOG.md) 的 2.0.1 节。
 
 ## 常用命令
 

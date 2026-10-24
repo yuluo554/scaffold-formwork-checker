@@ -3,6 +3,34 @@
 本文件记录对外可见的版本变更；格式遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，
 版本号遵循 [SemVer](https://semver.org/lang/zh-CN/)。
 
+## [2.0.1] — 2026-10-24
+
+**修正 v2.0.0 发布物的内嵌数据未同步（不影响任何数值结论与判定逻辑）。**
+
+### Fixed（发布物）
+
+- **v2.0.0 的 exe 附件里，7 个条款库 JSON 全部是 v1.0.0 的旧副本**：
+  `data/knowledge/clauses/*.json` 逐字节等于 tag `v1.0.0` 的对应文件，
+  因此 v2.0.0 宣称新增的 `meta.review`（复核元数据）**在下载到的 exe 里完全不存在**。
+  逐文件字节数（旧 → 应发布）：`decree37` 6,648→7,411、`formulas` 14,935→16,350、
+  `jgj130` 35,049→36,015、`jgj162` 13,846→14,601、`notice31` 8,536→9,564、
+  `panorama` 12,624→13,830、`thresholds` 19,122→20,243。
+- **根因**：v2.0.0 迭代的时序是「先重建 exe（18:34）→ 后改条款库（`e6ba924`，19:13）」，
+  提交时两者一起入库，但 `dist/` 未再重建；此后对 `dist/sfc` 的 `tools/build_exe.py --check`
+  沿用旧结果，发布前的「冒烟四连」只读版本/自检/基准/GUI 探针，**没有一项读 `meta.review`**，
+  于是旧数据一路绿灯发出。
+- **本版修正**：全量重建 onedir（`BUILD_CHECKS_OK`）并对新附件**逐字节**核对 45 个内嵌 data
+  条目与 `HEAD` 一致（0 条不符）。
+- **给 v2.0.0 下载者**：请在条款库层面改用本版附件。v2.0.0 的 exe **算出的数值结论是正确的**
+  （条款数值、阈值、算例真值三者未变），差异只在复核元数据的缺失。
+
+### Changed
+
+- 版本号 `2.0.0` → `2.0.1`（`pyproject.toml` + `__init__.py`）。
+- README 自述测试数与附件名同步实测值（`319 tests` → `329 tests`，附件名 → `v2.0.1`）。
+- PEP 639 许可证元数据迁移（`license = "MIT"` + `license-files = ["LICENSE"]`，
+  `setuptools>=77`）；**`requires-python` 未变**，pip 安装条件不变。
+
 ## [2.0.0] — 2026-10-19
 
 **破坏性变更：不再支持 Python 3.8 / 3.9，最低要求 Python 3.10。**

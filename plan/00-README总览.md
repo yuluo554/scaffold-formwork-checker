@@ -9,7 +9,7 @@
 
 **项目**：脚手架与模板支架安全验算及危大分级工具（土木工程·施工安全领域，Windows 桌面程序，零识图路线）
 **方法论**：ai-tool-project-sprint；与前作同模式（公式引擎+文本核查+分级判定+算例真值基准）
-**当前状态**：✅ **v2.0.0 已发布**（M1-M6 收官 + v2.0.0 二次迭代：Python floor 3.8→3.10、依赖线重评、条款库复核机制、发布物由 Python 3.12 重建；318 tests 全绿，CI 四矩阵 ubuntu/windows × 3.10/3.12；v1.0.0 发布门留档 [RELEASE-M6.md](RELEASE-M6.md)，v2.0.0 已发布：tag/Release [v2.0.0](https://github.com/yuluo554/scaffold-formwork-checker/releases/tag/v2.0.0)，执行记录见 update/02-执行记录.md；CI 四矩阵 ubuntu/windows × 3.10/3.12 在 e6ba924 全绿（run 39243179597））
+**当前状态**：✅ **v2.0.1 已发布**（2026-10-24：修正 v2.0.0 发布物内嵌条款库未同步 —— 该附件 7 个 `clauses/*.json` 逐字节为 v1.0.0 旧副本，`meta.review` 在附件里不存在；本版重建并逐字节核对 45 个内嵌 data 条目与 HEAD 一致。**329 tests 全绿**（build venv 实测），CI 四矩阵 ubuntu/windows × 3.10/3.12 在 `40128da` 全绿；v2.0.0 的 tag/Release 保留不动并加声明。历史：v2.0.0 = Python floor 3.8→3.10 + 依赖线重评 + 条款库复核机制，tag/Release [v2.0.0](https://github.com/yuluo554/scaffold-formwork-checker/releases/tag/v2.0.0)；v1.0.0 发布门留档 [RELEASE-M6.md](RELEASE-M6.md)；执行记录见 update/02-执行记录.md）
 
 ## 文档索引
 
